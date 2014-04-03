@@ -15,7 +15,7 @@ class TicTacToe:
         d_comp1 = self.board[0] == self.board[1] == self.board[2] == comp1_mark
         e_comp1 = self.board[3] == self.board[4] == self.board[5] == comp1_mark
         f_comp1 = self.board[6] == self.board[7] == self.board[8] == comp1_mark
-        g_comp1 = self.board[1] == self.board[4] == self.board[8] == comp1_mark
+        g_comp1 = self.board[0] == self.board[4] == self.board[8] == comp1_mark
         h_comp1 = self.board[2] == self.board[4] == self.board[6] == comp1_mark
         
         a_comp2 = self.board[0] == self.board[3] == self.board[6] == comp2_mark  #Various conditions
@@ -24,7 +24,7 @@ class TicTacToe:
         d_comp2 = self.board[0] == self.board[1] == self.board[2] == comp2_mark
         e_comp2 = self.board[3] == self.board[4] == self.board[5] == comp2_mark
         f_comp2 = self.board[6] == self.board[7] == self.board[8] == comp2_mark
-        g_comp2 = self.board[1] == self.board[4] == self.board[8] == comp2_mark
+        g_comp2 = self.board[0] == self.board[4] == self.board[8] == comp2_mark
         h_comp2 = self.board[2] == self.board[4] == self.board[6] == comp2_mark
         
         if a_comp1 or b_comp1 or c_comp1 or d_comp1 or e_comp1 or f_comp1 or g_comp1 or h_comp1: #Checks if any of these conditions are satisfied
