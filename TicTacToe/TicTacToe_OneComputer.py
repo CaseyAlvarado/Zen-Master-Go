@@ -85,14 +85,21 @@ class TicTacToe:
     
     def computer_move(self):
         possible_moves = []
+        outcomes = []
+        changed_board = self.board
         
         for i in range(len(self.board)):
             if self.board[i] == '-':
                 possible_moves.append(i)
-                
-        print possible_moves
-        random_move = random.randint(0,len(possible_moves)-1)
-        self.board[possible_moves[random_move]] = self.computer_mark
+        for p in range(len(possible_moves)):
+            changed_board[possible_moves[p]] = self.computer_mark
+            outcomes.append((possible_moves[p], self.flatten_tree(self.generate_tree(changed_board, True), 0)))
+        next_move = self.evaluate(outcomes) #tuple of the best move index and tuple of victory and depth 
+        self.board[next_move[0]] = self.computer_mark
+            
+#        print possible_moves
+#        random_move = random.randint(0,len(possible_moves)-1)
+#        self.board[possible_moves[random_move]] = self.computer_mark
         
     def find_blanks(self, board):
         blanks = []
@@ -142,6 +149,18 @@ class TicTacToe:
                 else:
                     branch.append(element)
             return self.flatten_tree(branch, depth)
+            
+    def evaluate(self, flattened_tree):
+        smaller_tuple = [] 
+        for element in flattened_tree: 
+            smaller_tuple.append(flattened_tree[1])
+        smaller_tuple.sort()
+        largest = smaller_tuple[-1]
+        
+        for k in range(len(flattened_tree)): 
+            if largest==flattened_tree[k][1]: 
+                p = flattened_tree[k][0]
+        return(p, largest)      
         
     def display_board(self):
         for i in range(3):
@@ -158,8 +177,9 @@ if __name__ == '__main__':
         
     game.display_board()
     
-    the_board = 
-    print game.generate_tree(game.board, True)
+    the_board = ['O', 'X', 'O', '-', 'X', '-', 'X', '-', '-']
+    print game.generate_tree(the_board, True)
+    print game.flatten_tree(game.generate_tree(the_board, True), 0)
     print game.flatten_tree([1, 2, [5, 8, 6], [3, 8, 4], 6], 0)
     print game.flatten_tree([1, 2, [5, 6, [1, 0, 4], 3]], 0)
         
