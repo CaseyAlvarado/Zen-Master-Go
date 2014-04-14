@@ -90,7 +90,7 @@ class TicTacToe:
                     temp_board[blanks[i]] = self.player_mark
                 
                 tree.append(self.generate_tree(temp_board, not comp_turn))
-                    
+                
         return tree
         
     def display_board(self):
