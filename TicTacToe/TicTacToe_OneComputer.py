@@ -165,6 +165,9 @@ class TicTacToe:
         smaller_tuple.sort()
         largest = smaller_tuple[-1]
         
+        print flattened_tree
+        print smaller_tuple
+        
         for k in range(len(flattened_tree)): 
             if largest == flattened_tree[k][1]: 
                 p = flattened_tree[k][0]
@@ -190,6 +193,8 @@ if __name__ == '__main__':
 #    print game.flatten_tree(game.generate_tree(the_board, True), 0)
 #    print game.flatten_tree([1, 2, [5, 8, 6], [3, 8, 4], 6], 0)
 #    print game.flatten_tree([1, 2, [5, 6, [1, 0, 4], 3]], 0)
+    
+    #print modified_min [(1, 2), (3,4), (-1,0)]
 
     while True:
         game.player_move()
