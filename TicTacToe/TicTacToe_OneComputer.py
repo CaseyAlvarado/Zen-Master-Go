@@ -188,7 +188,7 @@ if __name__ == '__main__':
 #    print game.flatten_tree(game.generate_tree(the_board, True), 0)
 #    print game.flatten_tree([1, 2, [5, 8, 6], [3, 8, 4], 6], 0)
 #    print game.flatten_tree([1, 2, [5, 6, [1, 0, 4], 3]], 0)
-        
+
     while True:
         game.player_move()
         game.display_board()
