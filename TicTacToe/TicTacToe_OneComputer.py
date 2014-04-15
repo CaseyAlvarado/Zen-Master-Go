@@ -95,10 +95,12 @@ class TicTacToe:
         for i in range(len(self.board)):
             if self.board[i] == '-':
                 possible_moves.append(i)
+            
         for p in range(len(possible_moves)):
             changed_board[possible_moves[p]] = self.computer_mark
             outcomes.append((possible_moves[p], self.flatten_tree(self.generate_tree(changed_board, True), 0)))
             changed_board[possible_moves[p]] = '-'
+        
         next_move = self.evaluate(outcomes) #tuple of the best move index and tuple of victory and depth
         self.board[next_move[0]] = self.computer_mark
             
@@ -159,7 +161,7 @@ class TicTacToe:
         p = 0
         smaller_tuple = [] 
         for element in flattened_tree: 
-            smaller_tuple.append(flattened_tree[1])
+            smaller_tuple.append(element[1])
         smaller_tuple.sort()
         largest = smaller_tuple[-1]
         
