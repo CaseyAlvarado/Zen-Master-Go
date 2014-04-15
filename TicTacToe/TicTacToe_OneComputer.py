@@ -1,8 +1,8 @@
 import random, math, sys
 
 def check_for_list(branch):
-    for item in branch:
-        if type(item) == list:
+    for i in range(len(branch)):
+        if type(branch[i]) == list:
             return True
     return False
 
