@@ -121,7 +121,9 @@ class TicTacToe:
         blanks = self.find_blanks(board)
         tree = []
         
-        if len(blanks) == 0:
+        if len(blanks) == 0: # Error in logic, the computer may win or lose before blanks are gone
+                             # This generates more nodes than necessary and may incorrectly
+                             # generate nodes.
             if self.check_victory(board)[0] and self.check_victory(board)[1] == "The computer":
                 return 1
             elif self.check_victory(board)[0] and self.check_victory(board)[1] == "The player":
@@ -157,8 +159,8 @@ class TicTacToe:
                     branch.append(element)
             return self.flatten_tree(branch, depth)
             
-    def evaluate(self, flattened_tree):
-        p = 0
+    def evaluate(self, flattened_tree):     # flattened_tree in this case is a
+        p = 0                               # list of tuples: (pos, (value, depth))
         smaller_tuple = [] 
         for element in flattened_tree: 
             smaller_tuple.append(element[1])
@@ -178,41 +180,50 @@ class TicTacToe:
             print str(self.board[i*3]) + " " + str(self.board[i*3+1]) + " " + str(self.board[i*3+2])
         
 if __name__ == '__main__':
-    first_player = raw_input("Who will go first? ") #You or me?
-        
-    if first_player == "me":
-        game = TicTacToe('X', 'O')
-    elif first_player == "you":
-        game = TicTacToe('O', 'X')
-        game.computer_move()
-        
-    game.display_board()
+    game = TicTacToe('X', 'O')
+    L = []
+#    L.append((1, game.flatten_tree([[[[-1],[-1]],[[-1],[0]]], [[1],[0]], [[1],[1]]], 0)))
+#    print game.evaluate(L)
     
-#    the_board = ['O', 'X', 'O', '-', 'X', '-', 'X', '-', '-']
-#    print game.generate_tree(the_board, True)
-#    print game.flatten_tree(game.generate_tree(the_board, True), 0)
-#    print game.flatten_tree([1, 2, [5, 8, 6], [3, 8, 4], 6], 0)
-#    print game.flatten_tree([1, 2, [5, 6, [1, 0, 4], 3]], 0)
+    the_board = ['O', 'X', 'O', '-', 'X', '-', 'X', '-', '-']
+    print game.generate_tree(the_board, True)
+    p = game.generate_tree(the_board, True)
+    L.append((1, game.flatten_tree(p[0], 0)))
+    L.append((2, game.flatten_tree(p[1], 0)))
+    L.append((3, game.flatten_tree(p[2], 0)))
+    L.append((4, game.flatten_tree(p[3], 0)))
     
-    #print modified_min [(1, 2), (3,4), (-1,0)]
+    print L
+    print game.evaluate(L)
+    
+#    first_player = raw_input("Who will go first? ") #You or me?
+#        
+#    if first_player == "me":
+#        game = TicTacToe('X', 'O')
+#    elif first_player == "you":
+#        game = TicTacToe('O', 'X')
+#        game.computer_move()
+#        
+#    game.display_board()
 
-    while True:
-        game.player_move()
-        game.display_board()
-        victory = game.check_victory(game.board)
-        if victory[0] == True:
-            print victory[1] + " wins!"
-            break
-        if game.check_stalemate(game.board):
-            print "Stalemate!"
-            break
-
-        game.computer_move()
-        game.display_board()
-        victory = game.check_victory(game.board)
-        if victory[0] == True:
-            print victory[1] + " wins!"
-            break
-        if game.check_stalemate(game.board):
-            print "Stalemate!"
-            break
+#    while True:
+#        print game.generate_tree(game.board, False)
+#        game.player_move()
+#        game.display_board()
+#        victory = game.check_victory(game.board)
+#        if victory[0] == True:
+#            print victory[1] + " wins!"
+#            break
+#        if game.check_stalemate(game.board):
+#            print "Stalemate!"
+#            break
+#
+#        game.computer_move()
+#        game.display_board()
+#        victory = game.check_victory(game.board)
+#        if victory[0] == True:
+#            print victory[1] + " wins!"
+#            break
+#        if game.check_stalemate(game.board):
+#            print "Stalemate!"
+#            break
