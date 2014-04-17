@@ -121,15 +121,15 @@ class TicTacToe:
         blanks = self.find_blanks(board)
         tree = []
         
-        if len(blanks) == 0: # Error in logic, the computer may win or lose before blanks are gone
+#        if len(blanks) == 0: # Error in logic, the computer may win or lose before blanks are gone
                              # This generates more nodes than necessary and may incorrectly
                              # generate nodes.
-            if self.check_victory(board)[0] and self.check_victory(board)[1] == "The computer":
-                return 1
-            elif self.check_victory(board)[0] and self.check_victory(board)[1] == "The player":
-                return -1
-            elif self.check_stalemate(board):
-                return 0
+        if self.check_victory(board)[0] and self.check_victory(board)[1] == "The computer":
+            return 1
+        elif self.check_victory(board)[0] and self.check_victory(board)[1] == "The player":
+            return -1
+        elif self.check_stalemate(board):
+            return 0
         else:
             for i in range(len(blanks)):
                 temp_board = board[:]
@@ -148,8 +148,8 @@ class TicTacToe:
             if depth % 2 == 0:              # if it's computer's move
                                             # return a tuple with the max rec_tree
                                             # value and rec_tree depth
-                return (modified_max(rec_tree), find_max_depth(rec_tree, depth))
-            return (modified_min(rec_tree), find_max_depth(rec_tree, depth))
+                return (modified_min(rec_tree), find_max_depth(rec_tree, depth))
+            return (modified_max(rec_tree), find_max_depth(rec_tree, depth))
         else:
             branch = []
             for element in rec_tree:
@@ -167,8 +167,8 @@ class TicTacToe:
         smaller_tuple.sort()
         largest = smaller_tuple[-1]
         
-        print flattened_tree
-        print smaller_tuple
+#        print flattened_tree
+#        print smaller_tuple
         
         for k in range(len(flattened_tree)): 
             if largest == flattened_tree[k][1]: 
@@ -180,50 +180,49 @@ class TicTacToe:
             print str(self.board[i*3]) + " " + str(self.board[i*3+1]) + " " + str(self.board[i*3+2])
         
 if __name__ == '__main__':
-    game = TicTacToe('X', 'O')
-    L = []
+#    game = TicTacToe('X', 'O')
+#    L = []
 #    L.append((1, game.flatten_tree([[[[-1],[-1]],[[-1],[0]]], [[1],[0]], [[1],[1]]], 0)))
 #    print game.evaluate(L)
     
-    the_board = ['O', 'X', 'O', '-', 'X', '-', 'X', '-', '-']
-    print game.generate_tree(the_board, True)
-    p = game.generate_tree(the_board, True)
-    L.append((1, game.flatten_tree(p[0], 0)))
-    L.append((2, game.flatten_tree(p[1], 0)))
-    L.append((3, game.flatten_tree(p[2], 0)))
-    L.append((4, game.flatten_tree(p[3], 0)))
+#    the_board = ['O', 'X', 'O', '-', 'X', '-', 'X', '-', '-']
+#    print game.generate_tree(the_board, True)
+#    p = game.generate_tree(the_board, True)
+#    L.append((1, game.flatten_tree(p[0], 0)))
+#    L.append((2, game.flatten_tree(p[1], 0)))
+#    L.append((3, game.flatten_tree(p[2], 0)))
+#    L.append((4, game.flatten_tree(p[3], 0)))
+#    
+#    print L
+#    print game.evaluate(L)
     
-    print L
-    print game.evaluate(L)
-    
-#    first_player = raw_input("Who will go first? ") #You or me?
-#        
-#    if first_player == "me":
-#        game = TicTacToe('X', 'O')
-#    elif first_player == "you":
-#        game = TicTacToe('O', 'X')
-#        game.computer_move()
-#        
-#    game.display_board()
+    first_player = raw_input("Who will go first? ") #You or me?
+        
+    if first_player == "me":
+        game = TicTacToe('X', 'O')
+    elif first_player == "you":
+        game = TicTacToe('O', 'X')
+        game.computer_move()
+        
+    game.display_board()
 
-#    while True:
-#        print game.generate_tree(game.board, False)
-#        game.player_move()
-#        game.display_board()
-#        victory = game.check_victory(game.board)
-#        if victory[0] == True:
-#            print victory[1] + " wins!"
-#            break
-#        if game.check_stalemate(game.board):
-#            print "Stalemate!"
-#            break
-#
-#        game.computer_move()
-#        game.display_board()
-#        victory = game.check_victory(game.board)
-#        if victory[0] == True:
-#            print victory[1] + " wins!"
-#            break
-#        if game.check_stalemate(game.board):
-#            print "Stalemate!"
-#            break
+    while True:
+        game.player_move()
+        game.display_board()
+        victory = game.check_victory(game.board)
+        if victory[0] == True:
+            print victory[1] + " wins!"
+            break
+        if game.check_stalemate(game.board):
+            print "Stalemate!"
+            break
+
+        game.computer_move()
+        game.display_board()
+        victory = game.check_victory(game.board)
+        if victory[0] == True:
+            print victory[1] + " wins!"
+            break
+        if game.check_stalemate(game.board):
+            print "Stalemate!"
+            break
