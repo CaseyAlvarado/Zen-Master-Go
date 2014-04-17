@@ -1,10 +1,6 @@
-import random, math, sys
+import sys
 
 def check_for_list(branch):
-#    print branch
-#    if type(branch) != list:
-#        print branch
-#        return False
     for i in range(len(branch)):
         if type(branch[i]) == list:
             return True
@@ -103,10 +99,6 @@ class TicTacToe:
         
         next_move = self.evaluate(outcomes) #tuple of the best move index and tuple of victory and depth
         self.board[next_move[0]] = self.computer_mark
-            
-#        print possible_moves
-#        random_move = random.randint(0,len(possible_moves)-1)
-#        self.board[possible_moves[random_move]] = self.computer_mark
         
     def find_blanks(self, board):
         blanks = []
@@ -121,9 +113,6 @@ class TicTacToe:
         blanks = self.find_blanks(board)
         tree = []
         
-#        if len(blanks) == 0: # Error in logic, the computer may win or lose before blanks are gone
-                             # This generates more nodes than necessary and may incorrectly
-                             # generate nodes.
         if self.check_victory(board)[0] and self.check_victory(board)[1] == "The computer":
             return 1
         elif self.check_victory(board)[0] and self.check_victory(board)[1] == "The player":
@@ -167,9 +156,6 @@ class TicTacToe:
         smaller_tuple.sort()
         largest = smaller_tuple[-1]
         
-#        print flattened_tree
-#        print smaller_tuple
-        
         for k in range(len(flattened_tree)): 
             if largest == flattened_tree[k][1]: 
                 p = flattened_tree[k][0]
@@ -179,23 +165,7 @@ class TicTacToe:
         for i in range(3):
             print str(self.board[i*3]) + " " + str(self.board[i*3+1]) + " " + str(self.board[i*3+2])
         
-if __name__ == '__main__':
-#    game = TicTacToe('X', 'O')
-#    L = []
-#    L.append((1, game.flatten_tree([[[[-1],[-1]],[[-1],[0]]], [[1],[0]], [[1],[1]]], 0)))
-#    print game.evaluate(L)
-    
-#    the_board = ['O', 'X', 'O', '-', 'X', '-', 'X', '-', '-']
-#    print game.generate_tree(the_board, True)
-#    p = game.generate_tree(the_board, True)
-#    L.append((1, game.flatten_tree(p[0], 0)))
-#    L.append((2, game.flatten_tree(p[1], 0)))
-#    L.append((3, game.flatten_tree(p[2], 0)))
-#    L.append((4, game.flatten_tree(p[3], 0)))
-#    
-#    print L
-#    print game.evaluate(L)
-    
+if __name__ == '__main__':    
     first_player = raw_input("Who will go first? ") #You or me?
         
     if first_player == "me":
