@@ -149,7 +149,7 @@ class TicTacToe:
             return self.flatten_tree(branch, depth)
             
     def evaluate(self, flattened_tree):     # flattened_tree in this case is a
-        p = 0                               # list of tuples: (pos, (value, depth))
+        p = 0                               # list of tuples: [(pos, (value, depth))]
         smaller_tuple = [] 
         for element in flattened_tree: 
             smaller_tuple.append(element[1])
