@@ -1,0 +1,7 @@
+OTHELLO-PY
+==========
+
+Download all the files to some directory and then run as:
+
+python othello_gui.py
+
