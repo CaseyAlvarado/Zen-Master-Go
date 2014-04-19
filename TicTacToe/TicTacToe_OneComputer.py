@@ -166,7 +166,7 @@ class TicTacToe:
             print str(self.board[i*3]) + " " + str(self.board[i*3+1]) + " " + str(self.board[i*3+2])
         
 if __name__ == '__main__':    
-    first_player = raw_input("Who will go first? ") #You or me?
+    first_player = raw_input("Who will go first? ") # You or me?
         
     if first_player == "me":
         game = TicTacToe('X', 'O')
