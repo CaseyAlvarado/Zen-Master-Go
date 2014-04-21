@@ -1,8 +1,8 @@
-import random, math, sys
+import sys
 
 def check_for_list(branch):
-    for item in branch:
-        if type(item) == list:
+    for i in range(len(branch)):
+        if type(branch[i]) == list:
             return True
     return False
 
@@ -76,23 +76,29 @@ class TicTacToe:
         return True
             
     def player_move(self):
-        mark = int(raw_input("What's your next move? ")) #Index from 0 to 8
+        mark = int(raw_input("What's your next move? ")) # Index from 0 to 8
         while(self.board[mark] != '-'):
             print "Invalid move."
-            mark = int(raw_input("What's your next move? ")) #Index from 0 to 8    
+            mark = int(raw_input("What's your next move? ")) # Index from 0 to 8
             
         self.board[mark] = self.player_mark
     
     def computer_move(self):
         possible_moves = []
+        outcomes = []
+        changed_board = self.board
         
         for i in range(len(self.board)):
             if self.board[i] == '-':
                 possible_moves.append(i)
-                
-        print possible_moves
-        random_move = random.randint(0,len(possible_moves)-1)
-        self.board[possible_moves[random_move]] = self.computer_mark
+            
+        for p in range(len(possible_moves)):
+            changed_board[possible_moves[p]] = self.computer_mark
+            outcomes.append((possible_moves[p], self.flatten_tree(self.generate_tree(changed_board, True), 0)))
+            changed_board[possible_moves[p]] = '-'
+        
+        next_move = self.evaluate(outcomes) #tuple of the best move index and tuple of victory and depth
+        self.board[next_move[0]] = self.computer_mark
         
     def find_blanks(self, board):
         blanks = []
@@ -100,20 +106,19 @@ class TicTacToe:
         for i in range(len(board)):
             if board[i] == '-':
                 blanks.append(i)
-                
+        
         return blanks
         
     def generate_tree(self, board, comp_turn):
         blanks = self.find_blanks(board)
         tree = []
         
-        if len(blanks) == 0:
-            if self.check_victory(board)[0] and self.check_victory(board)[1] == "The computer":
-                return 1
-            elif self.check_victory(board)[0] and self.check_victory(board)[1] == "The player":
-                return -1
-            elif self.check_stalemate(board):
-                return 0
+        if self.check_victory(board)[0] and self.check_victory(board)[1] == "The computer":
+            return 1
+        elif self.check_victory(board)[0] and self.check_victory(board)[1] == "The player":
+            return -1
+        elif self.check_stalemate(board):
+            return 0
         else:
             for i in range(len(blanks)):
                 temp_board = board[:]
@@ -132,8 +137,8 @@ class TicTacToe:
             if depth % 2 == 0:              # if it's computer's move
                                             # return a tuple with the max rec_tree
                                             # value and rec_tree depth
-                return (modified_max(rec_tree), find_max_depth(rec_tree, depth))
-            return (modified_min(rec_tree), find_max_depth(rec_tree, depth))
+                return (modified_min(rec_tree), find_max_depth(rec_tree, depth))
+            return (modified_max(rec_tree), find_max_depth(rec_tree, depth))
         else:
             branch = []
             for element in rec_tree:
@@ -142,13 +147,26 @@ class TicTacToe:
                 else:
                     branch.append(element)
             return self.flatten_tree(branch, depth)
+            
+    def evaluate(self, flattened_tree):     # flattened_tree in this case is a
+        p = 0                               # list of tuples: [(pos, (value, depth))]
+        smaller_tuple = [] 
+        for element in flattened_tree: 
+            smaller_tuple.append(element[1])
+        smaller_tuple.sort()
+        largest = smaller_tuple[-1]
+        
+        for k in range(len(flattened_tree)): 
+            if largest == flattened_tree[k][1]: 
+                p = flattened_tree[k][0]
+        return (p, largest)
         
     def display_board(self):
         for i in range(3):
             print str(self.board[i*3]) + " " + str(self.board[i*3+1]) + " " + str(self.board[i*3+2])
         
-if __name__ == '__main__':
-    first_player = raw_input("Who will go first? ") #You or me?
+if __name__ == '__main__':    
+    first_player = raw_input("Who will go first? ") # You or me?
         
     if first_player == "me":
         game = TicTacToe('X', 'O')
@@ -157,12 +175,7 @@ if __name__ == '__main__':
         game.computer_move()
         
     game.display_board()
-    
-    the_board = 
-    print game.generate_tree(game.board, True)
-    print game.flatten_tree([1, 2, [5, 8, 6], [3, 8, 4], 6], 0)
-    print game.flatten_tree([1, 2, [5, 6, [1, 0, 4], 3]], 0)
-        
+
     while True:
         game.player_move()
         game.display_board()
