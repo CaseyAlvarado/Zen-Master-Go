@@ -9,7 +9,7 @@ size = 10
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
-    def __init__(self,array=None):
+    def __init__(self,array):
         '''If the parameter 'board' is left out, then the game board
         is initialized to its typical starting postion. Alternatively,
         a two-dimensional list with a pre-existing starting position
@@ -17,14 +17,14 @@ class OthelloBoard:
         10x10, instead of 8x8; this is because leaving a blank ring
         around the edge of the board makes the rest of the code much
         simpler.'''
-        if array:
-            self.array = array
-        else:
+        if len(array) == 0:
             self.array = [[empty]*size for i in range(size)]
             self.array[4][4] = white
             self.array[5][5] = white
             self.array[4][5] = black
             self.array[5][4] = black
+        else:
+            self.array = array[:]
 
     def display(self):
         '''Displays the current board to the terminal window, with
@@ -162,8 +162,7 @@ class OthelloBoard:
                 plies = int(raw_input("How many plies ahead " + \
                                   "should the computer look? "))
                 players[i] = ComputerPlayer(
-                               'compy' + colorNames[i],colorValues[i],
-                               heuristic,plies)
+                               'compy' + colorNames[i],colorValues[i], self.heuristic,plies)
 
         # Number of times a "pass" move has been made, in a row
         passes = 0
@@ -237,7 +236,7 @@ class OthelloBoard:
         else:
             print 'Tie game!'
             
-    def heuristic(self):
+    def heuristic(self, board):
         '''This very silly heuristic just adds up all the 1s, -1s, and 0s stored on the othello board.'''
         sum = 0
         for i in range(1,size-1):
@@ -284,13 +283,14 @@ class ComputerPlayer:
     def chooseMove(self,board):
         '''This very silly player just returns the first legal move
         that it finds.'''
+        print OthelloBoard(board.array)._legalMoves(self.color)
         for i in range(1,size-1):
             for j in range(1,size-1):
                 bcopy = board.makeMove(i,j,self.color)
                 if bcopy:
-                    print 'Heuristic value = ',self.heuristic(bcopy)
+                    print 'Heuristic value = ',board.heuristic(bcopy)
                     return (i,j)
         return None
 
 if __name__=='__main__':
-    OthelloBoard().playGame()
+    OthelloBoard([]).playGame()
