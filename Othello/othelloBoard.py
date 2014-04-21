@@ -112,7 +112,7 @@ class OthelloBoard:
             return OthelloBoard(bcopy)
         else:
             return None
-             
+    
                          
     def _legalMoves(self,color):
         '''To be a legal move, the space must be blank, and you must take at
