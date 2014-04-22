@@ -5,6 +5,7 @@ white = 1
 black = -1
 empty = 0
 size = 10
+maxDepth = 10
 
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
@@ -236,12 +237,12 @@ class OthelloBoard:
         else:
             print 'Tie game!'
             
-    def heuristic(self, board):
+    def heuristic(self):
         '''This very silly heuristic just adds up all the 1s, -1s, and 0s stored on the othello board.'''
         sum = 0
         for i in range(1,size-1):
             for j in range(1,size-1):
-                sum += board.array[i][j]
+                sum += self.array[i][j]
         return sum
 
             
@@ -280,17 +281,45 @@ class ComputerPlayer:
         self.heuristic = heuristic
         self.plies = plies
 
+        if self.color == black:
+            self.opponentColor = white
+        else:
+            self.opponentColor = black
+
     def chooseMove(self,board):
         '''This very silly player just returns the first legal move
         that it finds.'''
-        print OthelloBoard(board.array)._legalMoves(self.color)
-        for i in range(1,size-1):
-            for j in range(1,size-1):
-                bcopy = board.makeMove(i,j,self.color)
-                if bcopy:
-                    print 'Heuristic value = ',board.heuristic(bcopy)
-                    return (i,j)
+        bestMove = self.minMax(board, 3, True)[1]
+        
+        if bestMove != (0,0):
+            return bestMove
         return None
+        
+    def minMax(self, node, depth, maximizing):
+        if depth == 0 or (len(node._legalMoves(self.color)) == 0 and len(node._legalMoves(self.opponentColor)) == 0):
+            return node.heuristic(), None
+            
+        if maximizing:
+            bestValue = -1000
+            bestMove = (0,0)
+            for i in node._legalMoves(self.color):
+                newNode = node.makeMove(i[0], i[1], self.color)
+                val = self.minMax(newNode, depth-1, False)[0]
+                if val > bestValue:
+                    bestValue = val
+                    bestMove = i
+            return bestValue, bestMove
+        else:
+            bestValue = 1000
+            bestMove = (0,0)
+            for i in node._legalMoves(self.opponentColor):
+                newNode = node.makeMove(i[0], i[1], self.opponentColor)
+                val = -self.minMax(newNode, depth-1, True)[0]
+                if val < bestValue:
+                    bestValue = val
+                    bestMove = i
+            return bestValue, bestMove
+    
 
 if __name__=='__main__':
     OthelloBoard([]).playGame()
