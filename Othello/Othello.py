@@ -1,16 +1,16 @@
 import copy
-import othelloPlayers
 
 # Constant values used throughout the code
 white = 1
 black = -1
 empty = 0
 size = 10
+maxDepth = 10
 
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
-    def __init__(self,array=None):
+    def __init__(self,array):
         '''If the parameter 'board' is left out, then the game board
         is initialized to its typical starting postion. Alternatively,
         a two-dimensional list with a pre-existing starting position
@@ -18,14 +18,14 @@ class OthelloBoard:
         10x10, instead of 8x8; this is because leaving a blank ring
         around the edge of the board makes the rest of the code much
         simpler.'''
-        if array:
-            self.array = array
-        else:
+        if len(array) == 0:
             self.array = [[empty]*size for i in range(size)]
             self.array[4][4] = white
             self.array[5][5] = white
             self.array[4][5] = black
             self.array[5][4] = black
+        else:
+            self.array = array[:]
 
     def display(self):
         '''Displays the current board to the terminal window, with
@@ -158,13 +158,12 @@ class OthelloBoard:
                              ' be (h)uman or (c)omputer? ')
             if response.lower() == 'h':
                 name = raw_input("What is the player's name? ")
-                players[i] = othelloPlayers.HumanPlayer(name,colorValues[i])
+                players[i] = HumanPlayer(name,colorValues[i])
             else:
                 plies = int(raw_input("How many plies ahead " + \
                                   "should the computer look? "))
-                players[i] = othelloPlayers.ComputerPlayer(
-                               'compy' + colorNames[i],colorValues[i],
-                               othelloPlayers.heuristic,plies)
+                players[i] = ComputerPlayer(
+                               'compy' + colorNames[i],colorValues[i], self.heuristic,plies)
 
         # Number of times a "pass" move has been made, in a row
         passes = 0
@@ -237,6 +236,98 @@ class OthelloBoard:
             print 'White wins!'
         else:
             print 'Tie game!'
+            
+    def heuristic(self):
+        '''This very silly heuristic just adds up all the 1s, -1s, and 0s stored on the othello board.'''
+        sum = 0
+        for i in range(1,size-1): #rows 
+            for j in range(1,size-1):#columns 
+                if (((i==1) or (i ==size-1)) and ((j==1) or (j==size-1))):  #all corners are worth 5 times the points 
+                    sum+=5*(self.array[i][j])
+                elif (((i >=3) and (i<=6)) and ((j==3) or (j==6))) or (((i==4) or (i==5)) and ((j==4) or (j==5))):
+                    sum+=4*(self.array[i][j])
+                elif (((i>=3) and (i<=6)) and ((j==1) or (j==size-1))) or (((i==1) or (i==size-1)) and ((j>=3) and (j<=6))): 
+                    sum+=3*(self.array[i][j])
+                elif (((i>=3) and (i<=6)) and ((j==2) or (j==size-2))) or (((i==2) or (i==size-2)) and ((j>=3) and (j<=6))): 
+                    sum += 2*(self.array[i][j])
+                elif (((i==1) or (i==size-1)) and ((j==2) or (j==size-2))) or (((i==2) or (i==size-2)) and ((j<=2) or (j>=size-2))):
+                    sum+= self.array[i][j]
+        return sum
+            
+class HumanPlayer:
+    '''Interactive player: prompts the user to make a move.'''
+    def __init__(self,name,color):
+        self.name = name
+        self.color = color
+        
+    def chooseMove(self,board):
+        while True:
+            try:
+                move = eval('(' + raw_input(self.name + \
+                 ': enter row, column (or type "0,0" if no legal move): ') \
+                 + ')')
+
+                if len(move)==2 and type(move[0])==int and \
+                   type(move[1])==int and (move[0] in range(1,9) and \
+                   move[1] in range(1,9) or move==(0,0)):
+                    break
+
+                print 'Illegal entry, try again.'
+            except Exception:
+                print 'Illegal entry, try again.'
+
+        if move==(0,0):
+            return None
+        else:
+            return move
+
+class ComputerPlayer:
+    '''Computer player: chooseMove is where the action is.'''
+    def __init__(self,name,color,heuristic,plies):
+        self.name = name
+        self.color = color
+        self.heuristic = heuristic
+        self.plies = plies
+
+        if self.color == black:
+            self.opponentColor = white
+        else:
+            self.opponentColor = black
+
+    def chooseMove(self,board):
+        '''This very silly player just returns the first legal move
+        that it finds.'''
+        bestMove = self.minMax(board, 3, True)[1]
+        
+        if bestMove != (0,0):
+            return bestMove
+        return None
+        
+    def minMax(self, node, depth, maximizing):
+        if depth == 0 or (len(node._legalMoves(self.color)) == 0 and len(node._legalMoves(self.opponentColor)) == 0):
+            return node.heuristic(), None
+            
+        if maximizing:
+            bestValue = -1000
+            bestMove = (0,0)
+            for i in node._legalMoves(self.color):
+                newNode = node.makeMove(i[0], i[1], self.color)
+                val = self.minMax(newNode, depth-1, False)[0]
+                if val > bestValue:
+                    bestValue = val
+                    bestMove = i
+            return bestValue, bestMove
+        else:
+            bestValue = 1000
+            bestMove = (0,0)
+            for i in node._legalMoves(self.opponentColor):
+                newNode = node.makeMove(i[0], i[1], self.opponentColor)
+                val = -self.minMax(newNode, depth-1, True)[0]
+                if val < bestValue:
+                    bestValue = val
+                    bestMove = i
+            return bestValue, bestMove
+    
 
 if __name__=='__main__':
-    OthelloBoard().playGame()
+    OthelloBoard([]).playGame()
