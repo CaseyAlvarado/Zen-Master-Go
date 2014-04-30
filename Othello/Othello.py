@@ -297,15 +297,16 @@ class ComputerPlayer:
     def chooseMove(self,board):
         '''This very silly player just returns the first legal move
         that it finds.'''
-        bestMove = self.minMax(board, 3, True)[1]
+        bestMove = self.minMax(board, self.plies, True)[1]
+        print bestMove
         
         if bestMove != (0,0):
             return bestMove
         return None
         
     def minMax(self, node, depth, maximizing):
-        if depth == 0 or (len(node._legalMoves(self.color)) == 0 and len(node._legalMoves(self.opponentColor)) == 0):
-            return node.heuristic(), None
+        if (depth == 0 or ((len(node._legalMoves(self.color)) == 0 and len(node._legalMoves(self.opponentColor)) == 0))):
+            return (node.heuristic(), None)
             
         if maximizing:
             bestValue = -1000
@@ -316,17 +317,17 @@ class ComputerPlayer:
                 if val > bestValue:
                     bestValue = val
                     bestMove = i
-            return bestValue, bestMove
+            return (bestValue, bestMove)
         else:
             bestValue = 1000
             bestMove = (0,0)
             for i in node._legalMoves(self.opponentColor):
                 newNode = node.makeMove(i[0], i[1], self.opponentColor)
-                val = -self.minMax(newNode, depth-1, True)[0]
+                val = self.minMax(newNode, depth-1, True)[0]
                 if val < bestValue:
                     bestValue = val
                     bestMove = i
-            return bestValue, bestMove
+            return (bestValue, bestMove)
     
 
 if __name__=='__main__':
