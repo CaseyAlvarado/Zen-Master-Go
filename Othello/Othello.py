@@ -239,12 +239,20 @@ class OthelloBoard:
             
     def heuristic(self):
         '''This very silly heuristic just adds up all the 1s, -1s, and 0s stored on the othello board.'''
-        sum = 0
-        for i in range(1,size-1):
-            for j in range(1,size-1):
-                sum += self.array[i][j]
-        return sum
-
+        scoreSum = 0
+        for i in range(1,size-1): #rows 
+            for j in range(1,size-1):#columns 
+                if (((i==1) or (i ==size-1)) and ((j==1) or (j==size-1))):  #all corners are worth 5 times the points 
+                    scoreSum+=5*(self.array[i][j])
+                elif (((i >=3) and (i<=6)) and ((j==3) or (j==6))) or (((i==4) or (i==5)) and ((j==4) or (j==5))):
+                    scoreSum+=4*(self.array[i][j])
+                elif (((i>=3) and (i<=6)) and ((j==1) or (j==size-1))) or (((i==1) or (i==size-1)) and ((j>=3) and (j<=6))): 
+                    scoreSum+=3*(self.array[i][j])
+                elif (((i>=3) and (i<=6)) and ((j==2) or (j==size-2))) or (((i==2) or (i==size-2)) and ((j>=3) and (j<=6))): 
+                    scoreSum += 2*(self.array[i][j])
+                elif (((i==1) or (i==size-1)) and ((j==2) or (j==size-2))) or (((i==2) or (i==size-2)) and ((j<=2) or (j>=size-2))):
+                    scoreSum+= self.array[i][j]
+        return scoreSum
             
 class HumanPlayer:
     '''Interactive player: prompts the user to make a move.'''
