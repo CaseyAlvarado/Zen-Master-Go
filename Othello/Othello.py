@@ -289,37 +289,34 @@ class ComputerPlayer:
     def chooseMove(self,board):
         '''This very silly player just returns the first legal move
         that it finds.'''
-        bestMove = self.minMax(board, 3, True)[1]
+        bestMove = self.minimax(board, self.plies, True)[0]
         
         if bestMove != (0,0):
             return bestMove
         return None
         
-    def minMax(self, node, depth, maximizing):
-        if depth == 0 or (len(node._legalMoves(self.color)) == 0 and len(node._legalMoves(self.opponentColor)) == 0):
-            return node.heuristic(), None
-            
-        if maximizing:
-            bestValue = -1000
-            bestMove = (0,0)
-            for i in node._legalMoves(self.color):
-                newNode = node.makeMove(i[0], i[1], self.color)
-                val = self.minMax(newNode, depth-1, False)[0]
-                if val > bestValue:
-                    bestValue = val
-                    bestMove = i
-            return bestValue, bestMove
+    def minimax(self, node, depth, maximizing):
+        if depth == 0 or not node._legalMoves(self.color):
+            return None, self.color * node.heuristic()
+
         else:
-            bestValue = 1000
+            bestVal = -1000
             bestMove = (0,0)
-            for i in node._legalMoves(self.opponentColor):
-                newNode = node.makeMove(i[0], i[1], self.opponentColor)
-                val = -self.minMax(newNode, depth-1, True)[0]
-                if val < bestValue:
-                    bestValue = val
+            if maximizing:
+                node_legalMoves = node._legalMoves(self.color)
+            else:
+                node_legalMoves = node._legalMoves(self.opponentColor)
+                
+            for i in node_legalMoves:
+                if maximizing:
+                    branch = node.makeMove(i[0], i[1], self.color)
+                else:
+                    branch = node.makeMove(i[0], i[1], self.opponentColor)
+                nextMove, val = self.minimax(branch, depth-1, not maximizing)
+                if val > bestVal:
+                    bestVal = val
                     bestMove = i
-            return bestValue, bestMove
-    
+            return bestMove, -bestVal
 
 if __name__=='__main__':
     OthelloBoard([]).playGame()
