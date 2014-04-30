@@ -306,10 +306,10 @@ class ComputerPlayer:
     def minimax(self, node, depth, maximizing):
         if depth == 0 or not node._legalMoves(self.color):
             return None, self.color * node.heuristic()
-
         else:
             bestVal = -1000
             bestMove = (0,0)
+            
             if maximizing:
                 node_legalMoves = node._legalMoves(self.color)
             else:
@@ -325,6 +325,6 @@ class ComputerPlayer:
                     bestVal = val
                     bestMove = i
             return bestMove, -bestVal
-
+            
 if __name__=='__main__':
     OthelloBoard([]).playGame()
