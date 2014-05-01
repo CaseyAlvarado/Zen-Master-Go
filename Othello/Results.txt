@@ -1,0 +1,2 @@
+Black goes first.
+Should black be (h)uman or (c)omputer? How many plies ahead should the computer look? 

@@ -1,7 +1,7 @@
 import copy
 
 import pygame 
-import pygame.locals 
+import pygame.locals import * 
 
 # Constant values used throughout the code
 #white = 1
@@ -13,7 +13,7 @@ import pygame.locals
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
-    def __init__(self,array, length_of_board):
+    def __init__(self,array):
         '''If the parameter 'board' is left out, then the game board
         is initialized to its typical starting postion. Alternatively,
         a two-dimensional list with a pre-existing starting position
@@ -21,10 +21,8 @@ class OthelloBoard:
         10x10, instead of 8x8; this is because leaving a blank ring
         around the edge of the board makes the rest of the code much
         simpler.'''
-#        self.length_of_board = length_of_board 
-        self.curBoard = curBoard
         if len(array) == 0:
-            self.array = [[empty]*length_of_board for i in range(self.length_of_board)]
+            self.array = [[empty]*size for i in range(size)]
             self.array[4][4] = white
             self.array[5][5] = white
             self.array[4][5] = black
@@ -147,8 +145,7 @@ class OthelloBoard:
 
     def playGame(self):
         '''Manages playing an actual game of Othello.'''
-#        screen = pygame.display.set_mode((self.length_of_board, self.length_of_board))
-#        view = ViewingPurposes(self, screen, self.array, cell_width, cell_height)
+        
         print 'Black goes first.'
         # Two player objects: [black, white]
         players=[None,None]
@@ -175,17 +172,15 @@ class OthelloBoard:
         passes = 0
 
         done = False
-        self.curBoard = self 
+        curBoard = self
         while not done:
 
             # Black goes, then white
             for i in range(2):
 
                 # Display board and statistics
-#                curBoard.display()
-#                view.drawBoard(curBoard)
-                
-                scores = self.curBoard.scores()
+                curBoard.display()
+                scores = curBoard.scores()
                 print 'Statistics: score / invalid passes / illegal moves'
                 for j in range(2):
                     print colorNames[j] + ':',scores[j], '/', \
@@ -194,7 +189,7 @@ class OthelloBoard:
                 print 'Turn:',colorNames[i]
 
                 # Obtain move that player makes
-                move = players[i].chooseMove(self.curBoard)
+                move = players[i].chooseMove(curBoard)
 
                 if move==None:
                     # If no move is made, that is considered a
@@ -205,7 +200,7 @@ class OthelloBoard:
 
                     passes += 1
                     print colorNames[i] + ' passes.'
-                    legalMoves=self.curBoard._legalMoves(colorValues[i])
+                    legalMoves=curBoard._legalMoves(colorValues[i])
                     if legalMoves != []:
                         print colorNames[i] + \
                               ' passed, but there was a legal move.'
@@ -220,12 +215,12 @@ class OthelloBoard:
 
                     passes = 0
                     print colorNames[i] + ' chooses ' + str(move) + '.'
-                    bcopy = self.curBoard.makeMove(move[0],move[1],colorValues[i])
+                    bcopy = curBoard.makeMove(move[0],move[1],colorValues[i])
                     if bcopy==None:
                         print 'That move is illegal, turn is forfeited.'
                         illegalMoves[i] += 1
                     else:
-                        self.curBoard = bcopy
+                        curBoard = bcopy
                 print
 
                 # To keep code simple, never test for win or loss; if
@@ -237,7 +232,7 @@ class OthelloBoard:
                     break
 
         # Display final outcome
-        scores = self.curBoard.scores()
+        scores = curBoard.scores()
         if scores[0] > scores[1]:
             print 'Black wins!'
         elif scores[1] > scores[0]:
@@ -245,7 +240,6 @@ class OthelloBoard:
         else:
             print 'Tie game!'
             
-    
     def heuristic(self):
         '''This very silly heuristic just adds up all the 1s, -1s, and 0s stored on the othello board.'''
         scoreSum = 0
@@ -335,41 +329,27 @@ class ComputerPlayer:
                     bestMove = i
             return bestMove, -bestVal
             
-class ViewingPurposes: 
-    def __init__(self, model, screen, array, cell_width, cell_height):
+class ViewingPurposes(self): 
+    def __init__(self, model, screen, array):
         self.model = model 
         self.screen = screen
         self.array = array
-        self.cell_width = cell_width
-        self.cell_height = cell_height  
         
-    def drawBoard(self, currentBoard):
-        print "before screen fill" 
+    def drawBoard(self):
         self.screen.fill(pygame.Color(255,255,255)) #setting background color 
-        print "after screen fill"
-        rows = 8 
-        columns = 8 
-        for i in range(rows):
-            for j in range(columns):
-                cell = pygame.Rect((i*self.cell_height), (j*self.cell_width), self.cell_width, self.cell_height)
-                pygame.draw.rect(self.screen, (200, 5, 156), cell)
+        for i in range(1,size-1):
+            for j in range(1,size-1):
+                cell = pygame.Rect(i, j, i, j)
+                pygame.draw.rect(self, screen, (200, 5, 156), cell)
                 
         ##draw the four original circles 
         #pygame.draw.circle(Surface, color, position, radius, width)
         
         ##then while loop with updating circles 
-#        for k in range(rows): 
-#            for c in range(columns): 
-#                center = ((k*cell_height + ((k*cell_height)/2.0)), (c*cell_height +((c*cell_height)/2.0)))
-#                if #color is black
-#                    pygame.draw.circle(self.screen, ())
-#                elif #color is white 
-#                    pygame.draw.circle(self.screen, ())
     
         
     def update(self): 
          for i in range(1,size-1):
-             
             for j in range(1,size-1):
                 if self.array[i][j] == white:
                     print 'W',
@@ -380,27 +360,20 @@ class ViewingPurposes:
         
             
 if __name__=='__main__':
-#    OthelloBoard([]).playGame()
+    OthelloBoard([]).playGame()
     
     
-    prompt = raw_input("Play? "); 
+    prompt = raw_input("Play? ");
     if prompt == "y":
-        size = (640, 640)
-        side_length = 640 #only works if square 
+        size = (600,600)
         screen = pygame.display.set_mode(size)
-        white = 1
-        black = -1
-        empty = 0
-        maxDepth = 10
-        cell_width = 80 
-        cell_height = 80 
-        
-        
-        model = OthelloBoard([], side_length)
-        model.playGame()
-        view = ViewingPurposes(model,screen, model.array, cell_width, cell_height)
-        view.drawBoard(model.curBoard)
-        
-        
-        
+
+    white = 1
+    black = -1
+    empty = 0
+#    size = 10
+    maxDepth = 10
+    
+    model = OthelloBoard()
+    view = ViewingPurposes(model,screen, model.array, )
     
