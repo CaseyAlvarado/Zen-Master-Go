@@ -453,7 +453,7 @@ if __name__=='__main__':
     elif scores[1] > scores[0]:
         print 'White wins!'
     else:
-        print 'Tie game!'
+        print 'Tie game!!'
 
 #    prompt = raw_input("Play? "); 
 #    if prompt == "y":
