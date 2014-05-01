@@ -4,16 +4,17 @@ import pygame
 import pygame.locals 
 
 # Constant values used throughout the code
-#white = 1
-#black = -1
-#empty = 0
+white = 1
+black = -1
+empty = 0
+size = 8
 #size = 10
 #maxDepth = 10
 
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
-    def __init__(self,array, length_of_board):
+    def __init__(self, array, length_of_board):
         '''If the parameter 'board' is left out, then the game board
         is initialized to its typical starting postion. Alternatively,
         a two-dimensional list with a pre-existing starting position
@@ -21,8 +22,8 @@ class OthelloBoard:
         10x10, instead of 8x8; this is because leaving a blank ring
         around the edge of the board makes the rest of the code much
         simpler.'''
-#        self.length_of_board = length_of_board 
-        self.curBoard = curBoard
+        self.length_of_board = length_of_board 
+#        self.curBoard = curBoard
         if len(array) == 0:
             self.array = [[empty]*length_of_board for i in range(self.length_of_board)]
             self.array[4][4] = white
@@ -145,105 +146,65 @@ class OthelloBoard:
         return score
 
 
-    def playGame(self):
+    def playPly(self, passes, done):
         '''Manages playing an actual game of Othello.'''
-#        screen = pygame.display.set_mode((self.length_of_board, self.length_of_board))
-#        view = ViewingPurposes(self, screen, self.array, cell_width, cell_height)
-        print 'Black goes first.'
-        # Two player objects: [black, white]
-        players=[None,None]
-        colorNames = ('black','white')
-        colorValues = (black,white)
-        invalidPasses = [0,0]
-        illegalMoves = [0,0]
-
-        # Determine whether each player is human or computer, and
-        # instantiate accordingly
+        # Black goes, then white
         for i in range(2):
-            response = raw_input('Should ' + colorNames[i] + \
-                             ' be (h)uman or (c)omputer? ')
-            if response.lower() == 'h':
-                name = raw_input("What is the player's name? ")
-                players[i] = HumanPlayer(name,colorValues[i])
-            else:
-                plies = int(raw_input("How many plies ahead " + \
-                                  "should the computer look? "))
-                players[i] = ComputerPlayer(
-                               'compy' + colorNames[i],colorValues[i], self.heuristic,plies)
 
-        # Number of times a "pass" move has been made, in a row
-        passes = 0
-
-        done = False
-        self.curBoard = self 
-        while not done:
-
-            # Black goes, then white
-            for i in range(2):
-
-                # Display board and statistics
+            # Display board and statistics
 #                curBoard.display()
 #                view.drawBoard(curBoard)
-                
-                scores = self.curBoard.scores()
-                print 'Statistics: score / invalid passes / illegal moves'
-                for j in range(2):
-                    print colorNames[j] + ':',scores[j], '/', \
-                          invalidPasses[j], '/',illegalMoves[j]
-                print
-                print 'Turn:',colorNames[i]
+            
+            scores = self.curBoard.scores()
+            print 'Statistics: score / invalid passes / illegal moves'
+            for j in range(2):
+                print colorNames[j] + ':',scores[j], '/', \
+                      invalidPasses[j], '/',illegalMoves[j]
+            print
+            print 'Turn:',colorNames[i]
 
-                # Obtain move that player makes
-                move = players[i].chooseMove(self.curBoard)
+            # Obtain move that player makes
+            move = players[i].chooseMove(self.curBoard)
 
-                if move==None:
-                    # If no move is made, that is considered a
-                    # pass. Verify that there were in fact no legal
-                    # moves available. If there were, allow the pass
-                    # anyway (this is easier to code), but record that
-                    # an invalid pass was taken.
+            if move==None:
+                # If no move is made, that is considered a
+                # pass. Verify that there were in fact no legal
+                # moves available. If there were, allow the pass
+                # anyway (this is easier to code), but record that
+                # an invalid pass was taken.
 
-                    passes += 1
-                    print colorNames[i] + ' passes.'
-                    legalMoves=self.curBoard._legalMoves(colorValues[i])
-                    if legalMoves != []:
-                        print colorNames[i] + \
-                              ' passed, but there was a legal move.'
-                        print 'Legal moves: ' + str(legalMoves)
-                        invalidPasses[i] += 1
+                passes += 1
+                print colorNames[i] + ' passes.'
+                legalMoves=self.curBoard._legalMoves(colorValues[i])
+                if legalMoves != []:
+                    print colorNames[i] + \
+                          ' passed, but there was a legal move.'
+                    print 'Legal moves: ' + str(legalMoves)
+                    invalidPasses[i] += 1
+            else:
+                # If a move is made, make the move on the
+                # board. makeMove returns None if the move is
+                # illegal. Record as an illegal move, and forfeit
+                # the player's turn. This is easier to code than
+                # offering another turn.
+
+                passes = 0
+                print colorNames[i] + ' chooses ' + str(move) + '.'
+                bcopy = self.curBoard.makeMove(move[0],move[1],colorValues[i])
+                if bcopy==None:
+                    print 'That move is illegal, turn is forfeited.'
+                    illegalMoves[i] += 1
                 else:
-                    # If a move is made, make the move on the
-                    # board. makeMove returns None if the move is
-                    # illegal. Record as an illegal move, and forfeit
-                    # the player's turn. This is easier to code than
-                    # offering another turn.
+                    self.curBoard = bcopy
+            print
 
-                    passes = 0
-                    print colorNames[i] + ' chooses ' + str(move) + '.'
-                    bcopy = self.curBoard.makeMove(move[0],move[1],colorValues[i])
-                    if bcopy==None:
-                        print 'That move is illegal, turn is forfeited.'
-                        illegalMoves[i] += 1
-                    else:
-                        self.curBoard = bcopy
-                print
-
-                # To keep code simple, never test for win or loss; if
-                # one player has won, lost, or tied, two passes must
-                # occur in a row.
-                if passes == 2:
-                    print 'Both players passed, game is over.'
-                    done = True
-                    break
-
-        # Display final outcome
-        scores = self.curBoard.scores()
-        if scores[0] > scores[1]:
-            print 'Black wins!'
-        elif scores[1] > scores[0]:
-            print 'White wins!'
-        else:
-            print 'Tie game!'
+            # To keep code simple, never test for win or loss; if
+            # one player has won, lost, or tied, two passes must
+            # occur in a row.
+            if passes == 2:
+                print 'Both players passed, game is over.'
+                done = True
+                break
             
     
     def heuristic(self):
@@ -376,30 +337,141 @@ class ViewingPurposes:
                 elif self.array[i][j] == black:
                     print 'B',
                 else:
-                    pass #what do I put here? CHECK THIS LATER 
+                    pass #what do I put here? CHECK THIS LATER
+
+class OthelloController:
+    def __init__(self, model):
+        self.model = model
+    
+    def makeMove(self, row, col, piece):
+        ''' Returns None if move is not legal. Otherwise returns an
+        updated OthelloBoard, which is a copy of the original.'''
+
+        # A move cannot be made if a piece is already there.
+        if self.array[row][col] != empty:
+             return None
+
+        # A move cannot be made if the piece "value" is not black or white.
+        if piece != black and piece != white:
+            return None
+
+        # Make a copy of the board (not just the pointer!)
+        bcopy = copy.deepcopy(self.array)
+        bcopy[row][col] = piece
+
+        # Ranges for use below
+        rowup = range(row+1,size)
+        rowdown = range(row-1,-1,-1)
+        rowfixed = [row for i in range(size)]
+        colup = range(col+1,size)
+        coldown = range(col-1,-1,-1)
+        colfixed = [col for i in range(size)]
+
+        # Set up ranges of tuples representing all eight directions.
+        vectors = [zip(rowup,coldown),zip(rowup,colfixed), \
+                zip(rowup,colup), zip(rowdown,coldown), \
+                zip(rowdown, colfixed), zip(rowdown,colup), \
+                zip(rowfixed,coldown), zip(rowfixed,colup)]
+
+        # Try to make a move in each direction. Record if at least one
+        # of them succeeds.
+        flipped = False
+        for vector in vectors:
+
+            # Determine how far you can go in this direction. If you
+            # see the opponent's piece, that's a candidate for
+            # flipping: count and keep moving. If you see your own
+            # piece, that's the end of the range and you're done. If
+            # you see a blank space, you must not have had one of your
+            # own pieces on the other end of the range.
+            count = 0
+            for (r,c) in vector:
+                if bcopy[r][c] == -1*piece:
+                    count += 1
+                elif bcopy[r][c] == piece:
+                    break
+                else:
+                    count = 0
+                    break
+
+            # If range is nontrivial, then it's a successful move.
+            if count > 0:
+                flipped = True
+
+            # Actually record the flips.
+            for i in range(count):
+                (r,c) = vector[i]
+                bcopy[r][c] = piece
+
+        if flipped:
+            return OthelloBoard(bcopy)
+        else:
+            return None
         
             
 if __name__=='__main__':
-#    OthelloBoard([]).playGame()
+#    '''Manages playing an actual game of Othello.'''
+#    screen = pygame.display.set_mode((self.length_of_board, self.length_of_board))
+#    view = ViewingPurposes(self, screen, self.array, cell_width, cell_height)
+
+    model = OthelloBoard([], size)
+
+    print 'Black goes first.'
     
+    # Two player objects: [black, white]
+    players = [None, None]
+    colorNames = ('black', 'white')
+    colorValues = (black, white)
+    invalidPasses = [0, 0]
+    illegalMoves = [0, 0]
+    start_heuristic = 0
+
+    # Determine whether each player is human or computer, and
+    # instantiate accordingly
+    for i in range(2):
+        response = raw_input('Should ' + colorNames[i] + ' be (h)uman or (c)omputer? ')
+        
+        if response.lower() == 'h':
+            name = raw_input("What is the player's name? ")
+            players[i] = HumanPlayer(name,colorValues[i])
+        else:
+            plies = int(raw_input("How many plies ahead should the computer look? "))
+            players[i] = ComputerPlayer('compy' + colorNames[i], colorValues[i], start_heuristic, plies)
+
+    # Number of times a "pass" move has been made, in a row
+    passes = 0
+
+    done = False
     
-    prompt = raw_input("Play? "); 
-    if prompt == "y":
-        size = (640, 640)
-        side_length = 640 #only works if square 
-        screen = pygame.display.set_mode(size)
-        white = 1
-        black = -1
-        empty = 0
-        maxDepth = 10
-        cell_width = 80 
-        cell_height = 80 
-        
-        
-        model = OthelloBoard([], side_length)
-        model.playGame()
-        view = ViewingPurposes(model,screen, model.array, cell_width, cell_height)
-        view.drawBoard(model.curBoard)
+    while not done:
+        model.playPly(passes, done)
+
+    # Display final outcome
+    scores = self.curBoard.scores()
+    if scores[0] > scores[1]:
+        print 'Black wins!'
+    elif scores[1] > scores[0]:
+        print 'White wins!'
+    else:
+        print 'Tie game!'
+
+#    prompt = raw_input("Play? "); 
+#    if prompt == "y":
+#        size = (640, 640)
+#        side_length = 640 #only works if square 
+#        screen = pygame.display.set_mode(size)
+#        white = 1
+#        black = -1
+#        empty = 0
+#        maxDepth = 10
+#        cell_width = 80 
+#        cell_height = 80 
+#        
+#        
+#        model = OthelloBoard([], side_length)
+#        model.playGame()
+#        view = ViewingPurposes(model,screen, model.array, cell_width, cell_height)
+#        view.drawBoard(model.curBoard)
         
         
         
