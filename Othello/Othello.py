@@ -8,7 +8,7 @@ white = 1
 black = -1
 empty = 0
 size = 8
-length_of_board = 8
+length_of_board = 10
 side_length = 640
 #size = 10
 #maxDepth = 10
@@ -277,6 +277,9 @@ class OthelloModel:
         # Number of times a "pass" move has been made, in a row
 #        passes = 0
 #        done = False
+        
+        self.board.display()
+        
         print
         for i in range(2):
             # Display board and statistics
