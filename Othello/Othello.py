@@ -297,18 +297,17 @@ class ComputerPlayer:
     def chooseMove(self,board):
         '''This very silly player just returns the first legal move
         that it finds.'''
-        bestMove = self.minimax(board, self.plies, True)[0]
+        bestMove = self.minimax(board, self.plies, True, 1000, 1000)[0]
         
         if bestMove != (0,0):
             return bestMove
         return None
         
-    def minimax(self, node, depth, maximizing):
+    def minimax(self, node, depth, maximizing, alpha, beta):
         if depth == 0 or not node._legalMoves(self.color):
             return None, self.color * node.heuristic()
         else:
-            bestVal = -1000
-            bestMove = (0,0)
+            bestMove = None
             
             if maximizing:
                 node_legalMoves = node._legalMoves(self.color)
@@ -320,11 +319,19 @@ class ComputerPlayer:
                     branch = node.makeMove(i[0], i[1], self.color)
                 else:
                     branch = node.makeMove(i[0], i[1], self.opponentColor)
-                nextMove, val = self.minimax(branch, depth-1, not maximizing)
-                if val > bestVal:
-                    bestVal = val
+                nextMove, val = self.minimax(branch, depth-1, not maximizing, alpha, beta)
+                val = -val
+                if val < alpha and maximizing:
+                    alpha = val
                     bestMove = i
-            return bestMove, -bestVal
+                if val < beta and not maximizing:
+                    beta = val
+                    bestMove = i
+                if alpha != 1000 and beta != -1000 and alpha <= -beta:
+                    break
+            if maximizing:
+                return bestMove, alpha
+            return bestMove, beta
             
 if __name__=='__main__':
     OthelloBoard([]).playGame()
