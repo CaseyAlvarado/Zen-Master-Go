@@ -8,13 +8,15 @@ white = 1
 black = -1
 empty = 0
 size = 8
+length_of_board = 8
+side_length = 640
 #size = 10
 #maxDepth = 10
 
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
-    def __init__(self, array, length_of_board):
+    def __init__(self, array):
         '''If the parameter 'board' is left out, then the game board
         is initialized to its typical starting postion. Alternatively,
         a two-dimensional list with a pre-existing starting position
@@ -22,6 +24,7 @@ class OthelloBoard:
         10x10, instead of 8x8; this is because leaving a blank ring
         around the edge of the board makes the rest of the code much
         simpler.'''
+        global length_of_board
         self.length_of_board = length_of_board 
 #        self.curBoard = curBoard
         if len(array) == 0:
@@ -169,6 +172,8 @@ class ComputerPlayer:
         self.color = color
         self.heuristic = heuristic
         self.plies = plies
+        self.invalidPasses = 0
+        self.illegalMoves = 0
 
         if self.color == black:
             self.opponentColor = white
@@ -212,7 +217,8 @@ class HumanPlayer:
     def __init__(self, name, color):
         self.name = name
         self.color = color
-        self.score = 0
+        self.invalidPasses = 0
+        self.illegalMoves = 0
     
     def chooseMove(self, board):
         while True:
@@ -279,7 +285,7 @@ class OthelloModel:
             self.scores = self.board.scores()
             print 'Statistics: score / invalid passes / illegal moves'
             for j in range(2):
-                print colorNames[j] + ':',self.players[j].scores, '/', \
+                print colorNames[j] + ':',self.board.scores()[j], '/', \
                       self.players[j].invalidPasses, '/', self.players[j].illegalMoves
             print
             print 'Turn:', colorNames[i]
@@ -429,7 +435,7 @@ class OthelloController:
 
             # Actually record the flips.
             for i in range(count):
-                (r,c) = vector[i]
+                (r, c) = vector[i]
                 bcopy[r][c] = piece
 
         if flipped:
@@ -445,7 +451,7 @@ if __name__=='__main__':
 #    size = (640, 640)
     side_length = 640   # only works if square 
 #    screen = pygame.display.set_mode(size)
-    model = OthelloModel(OthelloBoard([], side_length))
+    model = OthelloModel(OthelloBoard([]))
 #    model.playGame()
 #    view = ViewingPurposes(model,screen, model.array, cell_width, cell_height)
 #    view.drawBoard(model.curBoard)
