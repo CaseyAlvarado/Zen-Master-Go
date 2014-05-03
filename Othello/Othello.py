@@ -182,14 +182,11 @@ class ComputerPlayer:
         else:
             self.opponentColor = black
 
-    def chooseMove(self, board):
-        '''This very silly player just returns the first legal move
-        that it finds.'''
-        bestMove = self.minimax(board, self.plies, True)[0]
+    def chooseMove(self,board):
+        '''Chooses a move based on the best move that the minimax function returns'''
+        bestMove = self.minimax(board, self.plies, True, 1000, 1000)[0] # Minimax return values: (bestMove, alpha/beta)
         
-        if bestMove != (0,0):
-            return bestMove
-        return None
+        return bestMove
         
     def minimax(self, node, depth, maximizing, alpha, beta):
         '''Recursively looks a certain number of plies ahead to determine the best move'''
@@ -281,8 +278,6 @@ class OthelloModel:
     def playGame(self, num_passes):
         '''Manages playing an actual game of Othello.'''
         # Two player objects: [black, white]
-        invalidPasses = [0, 0]
-        illegalMoves = [0, 0]
         colorNames = ('black', 'white')
         passes = num_passes
         
