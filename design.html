@@ -51,9 +51,10 @@
 
 <h3>MiniMax and NegaMax</h3>
 <p>As we developed code for our Othello AI, we discovered that it would be relatively easy to implement NegaMax, which is essentially a different way of representing the MiniMax function. NegaMax simplifies the issue of alternating between finding the branch with the lowest score (for the opponent) and finding the branch with the highest score (for the player), by first picking the branch with the highest value and negating that number.</p>
-<img src = "./images/negamax.png">
-<p>As shown in this diagram, MiniMax recurses through each node by first calculating the heuristic values at the very bottom of the tree. Then those values propagate upwards, such that the square nodes pick the smallest value while the circular nodes pick the largest value. This requires a big 'if-else' statement in which the if block looks extremely similar to the else block. Rather than having such repetitive code, we combined the if and else blocks together. This also meant that at each depth, we had to negate each value, as shown below. This is how the NegaMax function works.</p>
-<img src = "./images/negamax2.png">
+<img src = "./images/negamax2.jpg" width="80%" style="margin-bottom:15px;">
+<p>As shown in this diagram, MiniMax recurses through each node by first calculating the heuristic values at the very bottom of the tree. Then those values propagate upwards, such that the square nodes pick the smallest value while the circular nodes pick the largest value. This requires a big 'if-else' statement in which the if block looks extremely similar to the else block. Rather than having such repetitive code, we combined the if and else blocks together. This also meant that at each depth, we had to negate each value, as shown below. This is how the NegaMax function works:</p>
+<img src = "./images/negamax.png" width="80%" style="margin-bottom:15px;">
+<p>Each node will always seek the value that is the highest and then negates it for each higher depth.</p>
 </section>
 
     </div>
