@@ -145,11 +145,11 @@ class OthelloBoard:
         
         print 'Black goes first.'
         # Two player objects: [black, white]
-        players=[None,None]
-        colorNames = ('black','white')
-        colorValues = (black,white)
-        invalidPasses = [0,0]
-        illegalMoves = [0,0]
+        players = [None, None]
+        colorNames = ('black', 'white')
+        colorValues = (black, white)
+        invalidPasses = [0, 0]
+        illegalMoves = [0, 0]
 
         # Determine whether each player is human or computer, and
         # instantiate accordingly
@@ -188,7 +188,7 @@ class OthelloBoard:
                 # Obtain move that player makes
                 move = players[i].chooseMove(curBoard)
 
-                if move==None:
+                if move == None:
                     # If no move is made, that is considered a
                     # pass. Verify that there were in fact no legal
                     # moves available. If there were, allow the pass
