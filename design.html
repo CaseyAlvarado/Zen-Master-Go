@@ -64,10 +64,10 @@
 <p>Next, we look at the -2 node at the far right. using this same process, we see that one of the branches is +2. When it gets negated, it turns into a -2. This is less than the +6 branch that's in the middle, and even if the +2 branch were a +10 branch or a +100000 branch, it won't change the outcome of the function - the +6 branch will get chosen no matter what. As a result, the +4 and the +8 branches get pruned.</p>
 <p>As it turns out, pruning has an exponential effect on the NegaMax function. We had two AI's play against each other without pruning, and the program ran for a total of 18 minutes and 15 seconds. With pruning, however, the runtime dropped significantly to 2 minutes and 27 seconds. The end result was also exactly the same.</p>
 <p>For a more detailed and less rambling description of alpha-beta pruning, this video serves as a very useful lecture (it's the one that we used to learn alpha-beta pruning). <a href="https://www.youtube.com/watch?v=xBXHtz4Gbdo" target="_blank">Link</a>. This is slightly different since it describes alpha-beta pruning with a MiniMax function instead of a NegaMax function. Nonetheless, it's really useful!
-</section>
 <h3>Data Structures</h3>
 <p>When saving the information that is passed up from the base case nodes, we want to save the board location that the branch is correlated to and the alpha or beta value. Therefore, by the necessity of our algorithm, recursion with a tuple was simplest. The first value of the tuple contains a tuple with a board position and the second value would be the alpha or beta value.</p>
 <p>The board is stored as a nested list with values of -1, 0, or 1. A -1 indicates that the board space is occupied by a white piece, 1 indicates a black piece, and 0 indicates an empty board space.</p>
+</section>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
