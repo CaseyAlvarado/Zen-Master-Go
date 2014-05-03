@@ -1,7 +1,7 @@
 import copy
 
 import pygame 
-import pygame.locals import * 
+from pygame.locals import * 
 
 # Constant values used throughout the code
 #white = 1
