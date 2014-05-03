@@ -10,6 +10,8 @@ empty = 0
 size = 8
 length_of_board = 10
 side_length = 640
+rows = 8 
+columns = 8 
 #size = 10
 #maxDepth = 10
 
@@ -42,13 +44,13 @@ class OthelloBoard:
         text output as being "old school," having a scrollable game
         history actually makes debugging much easier.'''
         print '  ',
-        for i in range(1, 9):
+        for i in range(1, rows+1):
             print i,
         print
         print
-        for i in range(1,size-1):
+        for i in range(1,rows+1):
             print i, '',
-            for j in range(1,size-1):
+            for j in range(1,columns +1):
                 if self.array[i][j] == white:
                     print 'W',
                 elif self.array[i][j] == black:
@@ -310,7 +312,7 @@ class OthelloModel:
                     print colorNames[i] + \
                           ' passed, but there was a legal move.'
                     print 'Legal moves: ' + str(legalMoves)
-                    invalidPasses[i] += 1
+                    self.players[i].invalidPasses += 1
             else:
                 # If a move is made, make the move on the
                 # board. makeMove returns None if the move is
@@ -323,10 +325,9 @@ class OthelloModel:
                 bcopy = self.board.makeMove(move[0],move[1],self.colorValues[i])
                 if bcopy == None:
                     print 'That move is illegal, turn is forfeited.'
-                    illegalMoves[i] += 1
+                    self.players[i].illegalMoves += 1
                 else:
                     self.board = bcopy
-            print
             
             return passes
 
