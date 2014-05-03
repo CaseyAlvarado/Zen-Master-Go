@@ -295,23 +295,21 @@ class ComputerPlayer:
             self.opponentColor = black
 
     def chooseMove(self,board):
-        '''This very silly player just returns the first legal move
-        that it finds.'''
-        bestMove = self.minimax(board, self.plies, True, 1000, 1000)[0]
+        '''Chooses a move based on the best move that the minimax function returns'''
+        bestMove = self.minimax(board, self.plies, True, 1000, 1000)[0] # Minimax return values: (bestMove, alpha/beta)
         
-        if bestMove != (0,0):
-            return bestMove
-        return None
+        return bestMove
         
     def minimax(self, node, depth, maximizing, alpha, beta):
-        if depth == 0 or not node._legalMoves(self.color):
+        '''Recursively looks a certain number of plies ahead to determine the best move'''
+        if depth == 0 or not node._legalMoves(self.color): # Base case - returns Roxanne heuristic of the board
             return None, self.color * node.heuristic()
         else:
             bestMove = None
             
-            if maximizing:
+            if maximizing: # Is it the computer's turn?
                 node_legalMoves = node._legalMoves(self.color)
-            else:
+            else:          # Or the opponent's turn?
                 node_legalMoves = node._legalMoves(self.opponentColor)
                 
             for i in node_legalMoves:
@@ -319,17 +317,19 @@ class ComputerPlayer:
                     branch = node.makeMove(i[0], i[1], self.color)
                 else:
                     branch = node.makeMove(i[0], i[1], self.opponentColor)
+                    
                 nextMove, val = self.minimax(branch, depth-1, not maximizing, alpha, beta)
-                val = -val
-                if val < alpha and maximizing:
-                    alpha = val
-                    bestMove = i
-                if val < beta and not maximizing:
+                val = -val # <---------------------- The tree will look like this:
+                                                    #              3
+                if val < alpha and maximizing:      #             / \
+                    alpha = val                     #           -3  -1 <---- Picks the largest branch
+                    bestMove = i                    #           /\  /\       and negates it
+                if val < beta and not maximizing:   #          3 1 1 -2
                     beta = val
                     bestMove = i
-                if alpha != 1000 and beta != -1000 and alpha <= -beta:
-                    break
-            if maximizing:
+                if alpha != 1000 and beta != -1000 and alpha <= -beta: # Ignores branches that don't need to be checked
+                    break                                              # Sometimes, it's mathematically impossible for certain branches 
+            if maximizing:                                             #      to be better than other branches, so they become pruned
                 return bestMove, alpha
             return bestMove, beta
             
