@@ -182,10 +182,10 @@ class ComputerPlayer:
         else:
             self.opponentColor = black
 
-    def chooseMove(self,board):
+    def chooseMove(self, board):
         '''Chooses a move based on the best move that the minimax function returns'''
         bestMove = self.minimax(board, self.plies, True, 1000, 1000)[0] # Minimax return values: (bestMove, alpha/beta)
-        
+        print bestMove
         return bestMove
         
     def minimax(self, node, depth, maximizing, alpha, beta):
@@ -257,6 +257,7 @@ class OthelloModel:
         self.colorNames = ('black', 'white')
         self.players = [None, None]
         self.scores = [0, 0]
+        self.passes = 0
         
         self.make_players()
         
@@ -275,11 +276,10 @@ class OthelloModel:
                 start_heuristic = 0
                 self.players[i] = ComputerPlayer('compy' + self.colorNames[i], self.colorValues[i], start_heuristic, plies)
         
-    def playGame(self, num_passes):
+    def playGame(self):
         '''Manages playing an actual game of Othello.'''
         # Two player objects: [black, white]
         colorNames = ('black', 'white')
-        passes = num_passes
         
         # Number of times a "pass" move has been made, in a row
 #        passes = 0
@@ -310,7 +310,7 @@ class OthelloModel:
                 # anyway (this is easier to code), but record that
                 # an invalid pass was taken.
                 
-                passes += 1
+                self.passes += 1
                 print colorNames[i] + ' passes.'
                 legalMoves=self.board._legalMoves(self.colorValues[i])
                 if legalMoves != []:
@@ -325,7 +325,7 @@ class OthelloModel:
                 # the player's turn. This is easier to code than
                 # offering another turn.
 
-                passes = 0
+                self.passes = 0
                 print colorNames[i] + ' chooses ' + str(move) + '.'
                 bcopy = self.board.makeMove(move[0],move[1],self.colorValues[i])
                 if bcopy == None:
@@ -333,8 +333,6 @@ class OthelloModel:
                     self.players[i].illegalMoves += 1
                 else:
                     self.board = bcopy
-            
-            return passes
 
             # To keep code simple, never test for win or loss; if
             # one player has won, lost, or tied, two passes must
@@ -477,15 +475,14 @@ if __name__=='__main__':
 #        cell_height = 80 
 
     done = False
-    passes = 0
     
     while not done:
-        passes = model.playGame(passes)
+        model.playGame()
         
         # To keep code simple, never test for win or loss; if
         # one player has won, lost, or tied, two passes must
         # occur in a row.
-        if passes == 2:
+        if model.passes == 2:
             print 'Both players passed, game is over.'
             done = True
             break
