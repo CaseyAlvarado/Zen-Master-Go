@@ -215,7 +215,7 @@ class ComputerPlayer:
                 if val < beta and not maximizing:   #          3 1 1 -2
                     beta = val
                     bestMove = i
-                if alpha != 1000 and beta != -1000 and alpha <= -beta: # Ignores branches that don't need to be checked
+                if alpha != 1000 and beta != 1000 and alpha <= -beta:  # Ignores branches that don't need to be checked
                     break                                              # Sometimes, it's mathematically impossible for certain branches 
             if maximizing:                                             #      to be better than other branches, so they become pruned
                 return bestMove, alpha
