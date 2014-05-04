@@ -234,12 +234,12 @@ class HumanPlayer:
         self.invalidPasses = 0
         self.illegalMoves = 0
     
-    def chooseMove(self):
+    def chooseMove(self, board):
         while True:
             try:
-##                move = eval('(' + raw_input(self.name + \
-##                 ': enter row, column (or type "0,0" if no legal move): ') \
-##                 + ')')
+#                move = eval('(' + raw_input(self.name + \
+#                 ': enter row, column (or type "0,0" if no legal move): ') \
+#                 + ')')
 
                 if len(move)==2 and type(move[0])==int and \
                    type(move[1])==int and (move[0] in range(1,9) and \
@@ -445,17 +445,15 @@ class ViewingPurposes:
 #        
 
 class OthelloController:
-    def __init__(self, model, screen, board):
+    def __init__(self, model, screen):
         self.model = model
         self.screen = screen 
-        self.board = board 
 
     def which_box(self): 
         if event.type == pygame.MOUSEBUTTONDOWN: 
             (mouseX, mouseY) = pygame.mouse.get_pos() 
-        mouseX/cell_width
-        boxX = mouseX/cell_width
-        boxY = mouseY/cell_height
+            boxX = mouseX/cell_width
+            boxY = mouseY/cell_height
         
         return (0+boxX, 0+boxY) 
         
@@ -478,16 +476,20 @@ if __name__=='__main__':
 #    windowSurface.blit(text, textRect)
 #    pygame.display.update()
 #    pygame.key.set_repeat(500, 30)
-    i = 0 
+    model = OthelloModel(OthelloBoard([]))     
+    controller = OthelloController(model, screen)
+    view = ViewingPurposes(model,screen)
+    playing = True
     while True:
-        playing = True 
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
-                sys.exit()                
-        model = OthelloModel(OthelloBoard([]))     
-        controller = OthelloController(model, screen, model.board)
-        view = ViewingPurposes(model,screen)
+                sys.exit() 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                (mouseX, mouseY) = pygame.mouse.get_pos() 
+                boxX = mouseX/cell_width
+                boxY = mouseY/cell_height
+                
         while playing: 
             model.playGame()
             view.drawBoard() 
