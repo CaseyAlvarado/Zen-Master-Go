@@ -1,8 +1,10 @@
 import copy
-import pygame 
+import pygame
+import sys
 from pygame.locals import *
 
 pygame.init()
+
 # Constant values used throughout the code
 white = 1
 black = -1
@@ -12,6 +14,9 @@ maxDepth = 10
 
 cell_width = 70
 cell_height = 70
+grid_width = 5
+grid_padding = 10
+
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
@@ -38,23 +43,22 @@ class OthelloBoard:
         text output as being "old school," having a scrollable game
         history actually makes debugging much easier.'''
 #        screen = pygame.display.set_mode((640,640))
-        windowSurface = pygame.display.set_mode((620, 620), 0, 32)
+        windowSurface = pygame.display.set_mode((615, 615), 0, 32)
         windowSurface.fill(pygame.Color(25,25,25)) #setting the background color
         
-        print '  ',
+        print ' ',
         for i in range(1,9):
             print i,
-        print
-        print
+        print 
         
         for k in range(8): 
             for j in range(8):
-                cell = pygame.Rect((k*cell_height) + 5*k + 10, (j*cell_width) + 5*j + 10, cell_width, cell_height)
+                cell = pygame.Rect((k*cell_height) + grid_width*k + grid_padding, (j*cell_width) + grid_width*j + grid_padding, cell_width, cell_height)
                 pygame.draw.rect(windowSurface, (31, 156, 191), cell)
     
         for i in range(0,9): 
             for j in range(0,9):
-                center = (( j*(cell_height+5) + ((cell_height)/2) + 10), ( i*(cell_height+5) + ((cell_height)/2) + 10))
+                center = (( j*(cell_height+grid_width) + ((cell_height)/2) + grid_padding), ( i*(cell_height+grid_width) + ((cell_height)/2) + grid_padding))
                 radius = (cell_width/2 - 5)
                 if self.array[i+1][j+1] == white:
                     pygame.draw.circle(windowSurface, (255, 255, 255), center, radius, 0)
@@ -64,6 +68,7 @@ class OthelloBoard:
         pygame.display.update()
         
         for i in range(1,9):
+            print i, 
             for j in range(1,9):
                 if self.array[i][j] == white:
                     print 'W',
