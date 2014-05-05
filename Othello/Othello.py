@@ -52,18 +52,24 @@ class OthelloBoard:
                 cell = pygame.Rect((k*cell_height) + 5*k + 10, (j*cell_width) + 5*j + 10, cell_width, cell_height)
                 pygame.draw.rect(windowSurface, (200, 5, 156), cell)
 #        windowSurface.blit(windowSurface, pygame.draw.rect(windowSurface, (200, 5, 156), cell))
-        pygame.display.update() 
+        
+        for k in range(8): 
+            for j in range(8):
+                center = (int(i*cell_height + ((i*cell_height)/2.0) + 5.0*i + 10.0), int(j*cell_height +((j*cell_height)/2.0) + 5.0*j + 10.0))
+                radius = int(cell_width/2.0)
+                if self.array[i][j] == white:
+                    pygame.draw.circle(windowSurface, (255, 255, 255), center, radius, 0)
+                elif self.array[i][j] == black:
+                    pygame.draw.circle(windowSurface, (0,0,0), center, radius, 0)
+        
+        pygame.display.update()
         
         for i in range(1,9):
             for j in range(1,9):
-                center = ((i*cell_height + ((i*cell_height)/2) + 5*i +10), (j*cell_height +((j*cell_height)/2) + 5*j +10))
-                radius = cell_width/2          
                 if self.array[i][j] == white:
                     print 'W',
-                    pygame.draw.circle(windowSurface, (255,255,255), center,radius, 0)
                 elif self.array[i][j] == black:
                     print 'B',
-                    pygame.draw.circle(windowSurface, (0,0,0), center, radius, 0)
                 else:
                     print '-',
             print
