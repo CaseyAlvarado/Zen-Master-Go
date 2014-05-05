@@ -1,5 +1,8 @@
 import copy
+import pygame 
+from pygame.locals import *
 
+pygame.init()
 # Constant values used throughout the code
 white = 1
 black = -1
@@ -7,6 +10,8 @@ empty = 0
 size = 10
 maxDepth = 10
 
+cell_width = 70
+cell_height =70
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
@@ -32,21 +37,37 @@ class OthelloBoard:
         headers across the left and top. While some might accuse this
         text output as being "old school," having a scrollable game
         history actually makes debugging much easier.'''
+#        screen = pygame.display.set_mode((640,640))
+        windowSurface = pygame.display.set_mode((640, 640), 0, 32)
+        windowSurface.fill(pygame.Color(255,255,255)) #setting the background color
+        
         print '  ',
         for i in range(1,9):
             print i,
         print
         print
-        for i in range(1,size-1):
-            print i, '',
-            for j in range(1,size-1):
+        
+        for k in range(8): 
+            for j in range(8):
+                cell = pygame.Rect((k*cell_height) + 5*k + 10, (j*cell_width) + 5*j + 10, cell_width, cell_height)
+                pygame.draw.rect(windowSurface, (200, 5, 156), cell)
+#        windowSurface.blit(windowSurface, pygame.draw.rect(windowSurface, (200, 5, 156), cell))
+        pygame.display.update() 
+        
+        for i in range(1,9):
+            for j in range(1,9):
+                center = ((i*cell_height + ((i*cell_height)/2) + 5*i +10), (j*cell_height +((j*cell_height)/2) + 5*j +10))
+                radius = cell_width/2          
                 if self.array[i][j] == white:
                     print 'W',
+                    pygame.draw.circle(windowSurface, (255,255,255), center,radius, 0)
                 elif self.array[i][j] == black:
                     print 'B',
+                    pygame.draw.circle(windowSurface, (0,0,0), center, radius, 0)
                 else:
                     print '-',
             print
+        pygame.display.update() 
 
     def makeMove(self,row,col,piece):
         ''' Returns None if move is not legal. Otherwise returns an
@@ -335,3 +356,10 @@ class ComputerPlayer:
             
 if __name__=='__main__':
     OthelloBoard([]).playGame()
+    
+    while True:
+        playing = True 
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()        
