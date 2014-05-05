@@ -11,7 +11,7 @@ size = 10
 maxDepth = 10
 
 cell_width = 70
-cell_height =70
+cell_height = 70
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
@@ -38,8 +38,8 @@ class OthelloBoard:
         text output as being "old school," having a scrollable game
         history actually makes debugging much easier.'''
 #        screen = pygame.display.set_mode((640,640))
-        windowSurface = pygame.display.set_mode((640, 640), 0, 32)
-        windowSurface.fill(pygame.Color(255,255,255)) #setting the background color
+        windowSurface = pygame.display.set_mode((620, 620), 0, 32)
+        windowSurface.fill(pygame.Color(25,25,25)) #setting the background color
         
         print '  ',
         for i in range(1,9):
@@ -50,16 +50,15 @@ class OthelloBoard:
         for k in range(8): 
             for j in range(8):
                 cell = pygame.Rect((k*cell_height) + 5*k + 10, (j*cell_width) + 5*j + 10, cell_width, cell_height)
-                pygame.draw.rect(windowSurface, (200, 5, 156), cell)
-#        windowSurface.blit(windowSurface, pygame.draw.rect(windowSurface, (200, 5, 156), cell))
-        
-        for k in range(8): 
-            for j in range(8):
-                center = (int(i*cell_height + ((i*cell_height)/2.0) + 5.0*i + 10.0), int(j*cell_height +((j*cell_height)/2.0) + 5.0*j + 10.0))
-                radius = int(cell_width/2.0)
-                if self.array[i][j] == white:
+                pygame.draw.rect(windowSurface, (31, 156, 191), cell)
+    
+        for i in range(0,9): 
+            for j in range(0,9):
+                center = (( j*(cell_height+5) + ((cell_height)/2) + 10), ( i*(cell_height+5) + ((cell_height)/2) + 10))
+                radius = (cell_width/2 - 5)
+                if self.array[i+1][j+1] == white:
                     pygame.draw.circle(windowSurface, (255, 255, 255), center, radius, 0)
-                elif self.array[i][j] == black:
+                elif self.array[i+1][j+1] == black:
                     pygame.draw.circle(windowSurface, (0,0,0), center, radius, 0)
         
         pygame.display.update()
