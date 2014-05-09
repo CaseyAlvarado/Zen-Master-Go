@@ -290,6 +290,15 @@ class HumanPlayer:
     def __init__(self,name,color):
         self.name = name
         self.color = color
+    
+    def check_grid_click(mouseX, mouseY):
+        for i in range(1, 7):
+            for j in range(5):
+                if mouseX == (grid_padding + i*(cell_width + grid_width)) + j:
+                    return True
+                elif mouseY == (grid_padding + i*(cell_height + grid_width)) + j:
+                    return True
+        return False
         
     def chooseMove(self,board):
         turnEnd = False
@@ -301,22 +310,35 @@ class HumanPlayer:
                         sys.exit()
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         (mouseX, mouseY) = pygame.mouse.get_pos()
-                        boxX = (mouseX - 10)/(cell_width + 5)
-                        boxY = (mouseY - 10)/(cell_height + 5)
-                        print (mouseX, mouseY)
+                        boxX = (mouseX - grid_padding)/(cell_width + grid_width)
+                        boxY = (mouseY - grid_padding)/(cell_height + grid_width)
+                        
                         move = (boxY + 1, boxX + 1)
-                        print move
+                        
                         if len(move)==2 and type(move[0])==int and \
                             type(move[1])==int and (move[0] in range(1,9) and \
                             move[1] in range(1,9) or move == (0,0)):
                                 turnEnd = True
                                 break
                         else:
-                            print 'Illegal entry, try again.'
+                            print 'Illegal entry, try again. (First one)'
+                        
+                        while check_grid_click(mouseX, mouseY):
+                            print 'You clicked on the grid. Re-select your move please.'
+                            boxX = (mouseX - grid_padding)/(cell_width + grid_width)
+                            boxY = (mouseY - grid_padding)/(cell_height + grid_width)
+                            move = (boxY + 1, boxX + 1)
+                            if len(move)==2 and type(move[0])==int and \
+                                type(move[1])==int and (move[0] in range(1,9) and \
+                                move[1] in range(1,9) or move == (0,0)):
+                                    turnEnd = True
+                                    break
+                            else:
+                                print 'Illegal entry, try again. (First one)'
             except Exception:
                 print 'Illegal entry, try again.'
 
-        if move==(0,0):
+        if move == (0,0):
             return None
         else:
             return move
