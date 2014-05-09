@@ -292,18 +292,27 @@ class HumanPlayer:
         self.color = color
         
     def chooseMove(self,board):
-        while True:
+        turnEnd = False
+        while not turnEnd:
             try:
-                move = eval('(' + raw_input(self.name + \
-                 ': enter row, column (or type "0,0" if no legal move): ') \
-                 + ')')
-
-                if len(move)==2 and type(move[0])==int and \
-                   type(move[1])==int and (move[0] in range(1,9) and \
-                   move[1] in range(1,9) or move==(0,0)):
-                    break
-
-                print 'Illegal entry, try again.'
+                for event in pygame.event.get():
+                    if event.type == QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        (mouseX, mouseY) = pygame.mouse.get_pos()
+                        boxX = (mouseX - 10)/(cell_width + 5)
+                        boxY = (mouseY - 10)/(cell_height + 5)
+                        print (mouseX, mouseY)
+                        move = (boxY + 1, boxX + 1)
+                        print move
+                        if len(move)==2 and type(move[0])==int and \
+                            type(move[1])==int and (move[0] in range(1,9) and \
+                            move[1] in range(1,9) or move == (0,0)):
+                                turnEnd = True
+                                break
+                        else:
+                            print 'Illegal entry, try again.'
             except Exception:
                 print 'Illegal entry, try again.'
 
@@ -311,6 +320,25 @@ class HumanPlayer:
             return None
         else:
             return move
+        
+#    def chooseMove(self,board):
+#        while True:
+#            try:
+#                move = eval('(' + raw_input(self.name + \
+#                ': enter row, column (or type "0,0" if no legal move): ') \
+#                + ')')
+#                if len(move)==2 and type(move[0])==int and \
+#                type(move[1])==int and (move[0] in range(1,9) and \
+#                move[1] in range(1,9) or move == (0,0)):
+#                    break
+#                print 'Illegal entry, try again.'
+#            except Exception:
+#                print 'Illegal entry, try again.'
+#            
+#        if move == (0,0):
+#            return None
+#        else:
+#            return move
 
 class ComputerPlayer:
     '''Computer player: chooseMove is where the action is.'''
