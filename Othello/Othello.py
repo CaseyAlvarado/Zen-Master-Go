@@ -244,11 +244,13 @@ class OthelloBoard:
                     passes = 0
                     print colorNames[i] + ' chooses ' + str(move) + '.'
                     bcopy = curBoard.makeMove(move[0],move[1],colorValues[i])
-                    if bcopy==None:
-                        print 'That move is illegal, turn is forfeited.'
-                        illegalMoves[i] += 1
-                    else:
-                        curBoard = bcopy
+                    while bcopy == None:
+                        print 'That move is illegal, please choose another move.'
+                        move = players[i].chooseMove(curBoard)
+                        print colorNames[i] + ' chooses ' + str(move) + '.'
+                        bcopy = curBoard.makeMove(move[0],move[1],colorValues[i]) 
+                    
+                    curBoard = bcopy
                 print
 
                 # To keep code simple, never test for win or loss; if
@@ -298,7 +300,6 @@ class HumanPlayer:
                     return True
                 elif mouseY == (grid_padding + i*(cell_height + grid_width)) - j:
                     return True
-        print 'False'
         return False
         
     def chooseMove(self,board):
@@ -311,7 +312,6 @@ class HumanPlayer:
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     (mouseX, mouseY) = pygame.mouse.get_pos()
-                    print (mouseX, mouseY)
                     
                     if self.check_grid_click(mouseX, mouseY):
                         print 'You clicked on the grid. Re-select your move please.'
