@@ -294,6 +294,10 @@ class HumanPlayer:
         self.color = color
     
     def check_grid_click(self, mouseX, mouseY):
+        if mouseX < grid_padding or mouseX > (grid_padding + 7*(cell_width + grid_width)):
+            return True
+        if mouseY < grid_padding or mouseY > (grid_padding + 7*(cell_height + grid_width)):
+            return True
         for i in range(1, 7):
             for j in range(5):
                 if mouseX == (grid_padding + i*(cell_width + grid_width)) - j:
@@ -314,7 +318,7 @@ class HumanPlayer:
                     (mouseX, mouseY) = pygame.mouse.get_pos()
                     
                     if self.check_grid_click(mouseX, mouseY):
-                        print 'You clicked on the grid. Re-select your move please.'
+                        print 'You did not click on a tile. Please re-select your move.'
                         # Get to the while statement
                         break;
                     
