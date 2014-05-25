@@ -17,6 +17,9 @@ cell_height = 70
 grid_width = 5
 grid_padding = 10
 
+board_width = 615
+board_height = 615
+
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
@@ -43,8 +46,10 @@ class OthelloBoard:
         text output as being "old school," having a scrollable game
         history actually makes debugging much easier.'''
 #        screen = pygame.display.set_mode((640,640))
-        windowSurface = pygame.display.set_mode((615, 615), 0, 32)
+        windowSurface = pygame.display.set_mode((board_width, board_height+75), 0, 32)
         windowSurface.fill(pygame.Color(25,25,25)) #setting the background color
+        statusbar = pygame.Rect(10, 615, 595, 65)
+        pygame.draw.rect(windowSurface, (34, 158, 0), statusbar)
         
         print ' ',
         for i in range(1,9):
