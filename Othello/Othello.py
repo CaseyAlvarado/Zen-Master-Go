@@ -45,7 +45,7 @@ class OthelloBoard:
         else:
             self.array = array[:]
 
-    def display(self):
+    def display(self, player_name):
         '''Displays the current board to the terminal window, with
         headers across the left and top. While some might accuse this
         text output as being "old school," having a scrollable game
@@ -56,7 +56,7 @@ class OthelloBoard:
         statusbar = pygame.Rect(10, 615, 595, 65)
         pygame.draw.rect(windowSurface, (34, 158, 0), statusbar)
                 
-        text = basicFont.render('Hello world!', True, WHITE)
+        text = basicFont.render(player_name, True, WHITE)
         windowSurface.blit(text, (30, 625))
         pygame.display.update()
         
@@ -220,7 +220,7 @@ class OthelloBoard:
             for i in range(2):
 
                 # Display board and statistics
-                curBoard.display()
+                curBoard.display(players[i].name)
                 scores = curBoard.scores()
                 print 'Statistics: score / invalid passes / illegal moves'
                 for j in range(2):
