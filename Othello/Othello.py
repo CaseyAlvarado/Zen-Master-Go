@@ -20,6 +20,11 @@ grid_padding = 10
 board_width = 615
 board_height = 615
 
+basicFont = pygame.font.SysFont(None, 48)
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
+
 class OthelloBoard:
     '''An Othello board, with a variety of methods for managing a game.'''
     
@@ -50,6 +55,10 @@ class OthelloBoard:
         windowSurface.fill(pygame.Color(25,25,25)) #setting the background color
         statusbar = pygame.Rect(10, 615, 595, 65)
         pygame.draw.rect(windowSurface, (34, 158, 0), statusbar)
+                
+        text = basicFont.render('Hello world!', True, WHITE)
+        windowSurface.blit(text, (30, 625))
+        pygame.display.update()
         
         print ' ',
         for i in range(1,9):
@@ -207,7 +216,6 @@ class OthelloBoard:
         done = False
         curBoard = self
         while not done:
-
             # Black goes, then white
             for i in range(2):
 
@@ -281,15 +289,15 @@ class OthelloBoard:
         for i in range(1,size-1): #rows 
             for j in range(1,size-1):#columns 
                 if (((i==1) or (i ==size-1)) and ((j==1) or (j==size-1))):  #all corners are worth 5 times the points 
-                    scoreSum+=5*(self.array[i][j])
+                    scoreSum += 5*(self.array[i][j])
                 elif (((i >=3) and (i<=6)) and ((j==3) or (j==6))) or (((i==4) or (i==5)) and ((j==4) or (j==5))):
-                    scoreSum+=4*(self.array[i][j])
+                    scoreSum+= 4*(self.array[i][j])
                 elif (((i>=3) and (i<=6)) and ((j==1) or (j==size-1))) or (((i==1) or (i==size-1)) and ((j>=3) and (j<=6))): 
-                    scoreSum+=3*(self.array[i][j])
+                    scoreSum += 3*(self.array[i][j])
                 elif (((i>=3) and (i<=6)) and ((j==2) or (j==size-2))) or (((i==2) or (i==size-2)) and ((j>=3) and (j<=6))): 
                     scoreSum += 2*(self.array[i][j])
                 elif (((i==1) or (i==size-1)) and ((j==2) or (j==size-2))) or (((i==2) or (i==size-2)) and ((j<=2) or (j>=size-2))):
-                    scoreSum+= self.array[i][j]
+                    scoreSum += self.array[i][j]
         return scoreSum
             
 class HumanPlayer:
@@ -299,9 +307,9 @@ class HumanPlayer:
         self.color = color
     
     def check_grid_click(self, mouseX, mouseY):
-        if mouseX < grid_padding or mouseX > (grid_padding + 7*(cell_width + grid_width)):
+        if mouseX < grid_padding or mouseX > (grid_padding + 8*(cell_width + grid_width)):
             return True
-        if mouseY < grid_padding or mouseY > (grid_padding + 7*(cell_height + grid_width)):
+        if mouseY < grid_padding or mouseY > (grid_padding + 8*(cell_height + grid_width)):
             return True
         for i in range(1, 7):
             for j in range(5):
