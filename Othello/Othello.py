@@ -58,6 +58,12 @@ class OthelloBoard:
                 
         text = basicFont.render(player_name, True, WHITE)
         windowSurface.blit(text, (30, 625))
+        
+        pass_button = pygame.Rect((400, 625, 100, 40))
+        pygame.draw.rect(windowSurface, (0, 0, 0), pass_button)
+        
+        pass_text = basicFont.render('Pass', True, WHITE)
+        windowSurface.blit(pass_text, pass_button)
         pygame.display.update()
         
         print ' ',
@@ -329,6 +335,9 @@ class HumanPlayer:
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     (mouseX, mouseY) = pygame.mouse.get_pos()
+                    
+                    if mouseX >= 400 and mouseX <= 500 and mouseY >= 625 and mouseY <= 665:  # if pass is clicked
+                        return None
                     
                     if self.check_grid_click(mouseX, mouseY):
                         print 'You did not click on a tile. Please re-select your move.'
