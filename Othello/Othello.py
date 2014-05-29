@@ -21,6 +21,7 @@ board_width = 615
 board_height = 615
 
 basicFont = pygame.font.SysFont(None, 48)
+helvetica = pygame.font.SysFont('helvetica', 28)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
@@ -56,7 +57,7 @@ class OthelloBoard:
         statusbar = pygame.Rect(10, 615, 595, 65)
         pygame.draw.rect(windowSurface, (34, 158, 0), statusbar)
                 
-        text = basicFont.render(player_name, True, WHITE)
+        text = helvetica.render(player_name + '\'s turn', True, WHITE)
         windowSurface.blit(text, (30, 625))
         
         pass_button = pygame.Rect((400, 625, 100, 40))
