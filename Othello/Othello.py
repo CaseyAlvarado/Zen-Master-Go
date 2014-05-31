@@ -20,6 +20,8 @@ grid_padding = 10
 board_width = 615
 board_height = 615
 
+pass_button = pygame.Rect((450, 625, 95, 43))
+
 basicFont = pygame.font.SysFont(None, 48)
 tahoma = pygame.font.SysFont('tahoma', 36)
 helvetica = pygame.font.SysFont('helvetica', 28)
@@ -65,17 +67,18 @@ class OthelloBoard:
         
         stroke = 2
         
-        pass_button = pygame.Rect((425, 625, 95, 43))
         pygame.draw.rect(windowSurface, BLACK, pass_button, stroke)
         
-        pass_button.width = pass_button.width - 4
-        pass_button.height = pass_button.height - 4
-        pass_button.x = pass_button.x + 2
-        pass_button.y = pass_button.y + 2
-        pygame.draw.rect(windowSurface, (24, 128, 0), pass_button)
+        w = pass_button.width - 4
+        h = pass_button.height - 4
+        x = pass_button.x + 2
+        y = pass_button.y + 2
+        pass_button_inner = pygame.Rect((x,y,w,h))
+
+        pygame.draw.rect(windowSurface, (24, 128, 0), pass_button_inner)
         
         pass_text = tahoma.render('Pass', True, WHITE)
-        windowSurface.blit(pass_text, (pass_button.x+10, pass_button.y))
+        windowSurface.blit(pass_text, (pass_button.x+10, pass_button.y-3))
         pygame.display.update()
         
         print ' ',
@@ -348,8 +351,10 @@ class HumanPlayer:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     (mouseX, mouseY) = pygame.mouse.get_pos()
                     
-                    if mouseX >= 400 and mouseX <= 500 and mouseY >= 625 and mouseY <= 665:  # if pass is clicked
-                        return None
+                    if mouseX >= pass_button.x-2 and mouseX <= pass_button.x + pass_button.width+2 and \
+                        mouseY >= pass_button.y-2 and mouseY <= pass_button.y + pass_button.height+2:
+                            # Return no moves if the pass button is clicked
+                            return None
                     
                     if self.check_grid_click(mouseX, mouseY):
                         print 'You did not click on a tile. Please re-select your move.'
