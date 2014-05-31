@@ -63,10 +63,16 @@ class OthelloBoard:
         text = helvetica.render(player_name + '\'s turn', True, WHITE)
         windowSurface.blit(text, (30, 625))
         
-        stroke = 2        
+        stroke = 2
         
         pass_button = pygame.Rect((425, 625, 95, 43))
         pygame.draw.rect(windowSurface, BLACK, pass_button, stroke)
+        
+        pass_button.width = pass_button.width - 4
+        pass_button.height = pass_button.height - 4
+        pass_button.x = pass_button.x + 2
+        pass_button.y = pass_button.y + 2
+        pygame.draw.rect(windowSurface, (24, 128, 0), pass_button)
         
         pass_text = tahoma.render('Pass', True, WHITE)
         windowSurface.blit(pass_text, (pass_button.x+10, pass_button.y))
