@@ -63,7 +63,7 @@ class OthelloBoard:
         pygame.draw.rect(windowSurface, (34, 158, 0), statusbar)
                 
         text = helvetica.render(player_name + '\'s turn', True, WHITE)
-        windowSurface.blit(text, (30, 625))
+        windowSurface.blit(text, (30, 630))
         
         stroke = 2
         
