@@ -92,7 +92,7 @@ class TicTacToe:
         self.board[mark] = self.player_mark
     
     def computer_move(self):
-        next_move = self.minimax(self.board, 10, True)
+        next_move = self.minimax(self.board, 10, True, 9)
         self.board[next_move[1]] = self.computer_mark
         
     def find_blanks(self, board):
@@ -104,33 +104,33 @@ class TicTacToe:
         
         return blanks
     
-    def minimax(self, board, depth, comp_turn):
+    def minimax(self, board, depth, comp_turn, comp_move):
         if depth == 0 or self.check_victory(self.board)[0]:
-            return (self.evaluate_board(), 0)
+            return (self.evaluate_board(), comp_move)
         
         if self.check_stalemate(self.board):
-            return (0, 0)
+            return (0, comp_move)
             
         possible_moves = self.find_blanks(self.board)
         
-        if comp_turn:
+        if comp_turn == True:
             best_value = -1000
             comp_move = possible_moves[0]
             for move in possible_moves:
                 self.board[move] = self.computer_mark
-                value = self.minimax(self.board, depth-1, not(comp_turn))[0]
+                value = self.minimax(self.board, depth-1, False, comp_move)[0]
                 self.board[move] = '-'
                 if value > best_value:
                     best_value = value
                     comp_move = move
             return (best_value, comp_move)
         
-        if not(comp_turn):
+        if comp_turn == False:
             best_value = 1000
             comp_move = possible_moves[0]
             for move in possible_moves:
                 self.board[move] = self.player_mark
-                value = self.minimax(self.board, depth-1, comp_turn)[0]
+                value = self.minimax(self.board, depth-1, True, comp_move)[0]
                 self.board[move] = '-'
                 if value < best_value:
                     best_value = value
