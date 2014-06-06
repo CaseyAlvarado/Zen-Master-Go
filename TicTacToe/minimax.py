@@ -1,39 +1,3 @@
-import sys
-
-def check_for_list(branch):
-    for i in range(len(branch)):
-        if type(branch[i]) == list:
-            return True
-    return False
-
-def modified_min(in_list):
-    minimum = sys.maxint
-    for element in in_list:
-        if type(element) == tuple:
-            if element[0] < minimum:
-                minimum = element[0]
-        elif element < minimum:
-            minimum = element
-    return minimum
-
-def modified_max(in_list):
-    maximum = -sys.maxint - 1
-    for element in in_list:
-        if type(element) == tuple:
-            if element[0] > maximum:
-                maximum = element[0]
-        elif element > maximum:
-            maximum = element
-    return maximum
-
-def find_max_depth(in_list, current_depth):
-    max_depth = current_depth
-    for element in in_list:
-        if type(element) == tuple:
-            if element[1] > max_depth:
-                max_depth = element[1]
-    return max_depth
-
 class TicTacToe:
     """ Encodes the state of the Tic Tac Toe board """
     def __init__(self, player_mark, computer_mark):
@@ -136,58 +100,6 @@ class TicTacToe:
                     best_value = value
                     comp_move = move
             return (best_value, comp_move)
-        
-    def generate_tree(self, board, comp_turn):
-        blanks = self.find_blanks(board)
-        tree = []
-        
-        if self.check_victory(board)[0] and self.check_victory(board)[1] == "The computer":
-            return 1
-        elif self.check_victory(board)[0] and self.check_victory(board)[1] == "The player":
-            return -1
-        elif self.check_stalemate(board):
-            return 0
-        else:
-            for i in range(len(blanks)):
-                temp_board = board[:]
-                
-                if comp_turn:
-                    temp_board[blanks[i]] = self.computer_mark
-                else:
-                    temp_board[blanks[i]] = self.player_mark
-                
-                tree.append(self.generate_tree(temp_board, not comp_turn))
-                
-        return tree
-    
-    def flatten_tree(self, rec_tree, depth):
-        if not(check_for_list(rec_tree)):   # if there are no lists in rec_tree
-            if depth % 2 == 0:              # if it's computer's move
-                                            # return a tuple with the max rec_tree
-                                            # value and rec_tree depth
-                return (modified_min(rec_tree), find_max_depth(rec_tree, depth))
-            return (modified_max(rec_tree), find_max_depth(rec_tree, depth))
-        else:
-            branch = []
-            for element in rec_tree:
-                if type(element) == list:
-                    branch.append(self.flatten_tree(element, depth+1))
-                else:
-                    branch.append(element)
-            return self.flatten_tree(branch, depth)
-            
-    def evaluate(self, flattened_tree):     # flattened_tree in this case is a
-        p = 0                               # list of tuples: [(pos, (value, depth))]
-        smaller_tuple = [] 
-        for element in flattened_tree: 
-            smaller_tuple.append(element[1])
-        smaller_tuple.sort()
-        largest = smaller_tuple[-1]
-        
-        for k in range(len(flattened_tree)): 
-            if largest == flattened_tree[k][1]: 
-                p = flattened_tree[k][0]
-        return (p, largest)
         
     def display_board(self):
         for i in range(3):
