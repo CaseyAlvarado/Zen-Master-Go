@@ -52,13 +52,16 @@ class OthelloBoard:
             self.array = array[:]
 
     def display(self, player_name):
-        '''Displays the current board to the terminal window, with
-        headers across the left and top. While some might accuse this
-        text output as being "old school," having a scrollable game
-        history actually makes debugging much easier.'''
-#        screen = pygame.display.set_mode((640,640))
+        '''Displays the current board to terminal and pygame windows,
+        with headers displaying numbers to guide the user in determining
+        board position. Displaying to terminal shows the history,
+        providing a powerful debugging tool.'''
+
+        # Sets up the initial window screen
         windowSurface = pygame.display.set_mode((board_width, board_height+75), 0, 32)
-        windowSurface.fill(pygame.Color(25,25,25)) #setting the background color
+        windowSurface.fill(pygame.Color(25,25,25)) # Sets the background color
+
+        # Adds the status bar below the game board
         statusbar = pygame.Rect(10, 615, 595, 65)
         pygame.draw.rect(windowSurface, (34, 158, 0), statusbar)
                 
@@ -305,7 +308,8 @@ class OthelloBoard:
             print 'Tie game!'
             
     def heuristic(self):
-        '''This very silly heuristic just adds up all the 1s, -1s, and 0s stored on the othello board.'''
+        '''This function just takes the piece value (either 1 or -1) and multiplies it by a weight given
+        by the board position.'''
         scoreSum = 0
         for i in range(1,size-1): #rows 
             for j in range(1,size-1):#columns 
@@ -343,7 +347,6 @@ class HumanPlayer:
     def chooseMove(self,board):
         turnEnd = False
         while not turnEnd:
-#            try:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -372,15 +375,13 @@ class HumanPlayer:
                             turnEnd = True
                     else:
                         print 'Illegal entry, try again. (First one)'
-                        
-#            except Exception:
-#                print 'Illegal entry, try again.'
 
         if move == (0,0):
             return None
         else:
             return move
         
+# This is for command-line input
 #    def chooseMove(self,board):
 #        while True:
 #            try:
@@ -460,4 +461,4 @@ if __name__=='__main__':
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
-                sys.exit()        
+                sys.exit()
