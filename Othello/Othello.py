@@ -87,24 +87,27 @@ class OthelloBoard:
         print ' ',
         for i in range(1,9):
             print i,
-        print 
-        
+        print
+
+        # This draws the game board
         for k in range(8): 
             for j in range(8):
                 cell = pygame.Rect((k*cell_height) + grid_width*k + grid_padding, (j*cell_width) + grid_width*j + grid_padding, cell_width, cell_height)
                 pygame.draw.rect(windowSurface, (31, 156, 191), cell)
     
+        # Draws each piece onto the board
         for i in range(0,9): 
             for j in range(0,9):
                 center = (( j*(cell_height+grid_width) + ((cell_height)/2) + grid_padding), ( i*(cell_height+grid_width) + ((cell_height)/2) + grid_padding))
                 radius = (cell_width/2 - 5)
                 if self.array[i+1][j+1] == white:
-                    pygame.draw.circle(windowSurface, (255, 255, 255), center, radius, 0)
+                    pygame.draw.circle(windowSurface, WHITE, center, radius, 0)
                 elif self.array[i+1][j+1] == black:
-                    pygame.draw.circle(windowSurface, (0,0,0), center, radius, 0)
+                    pygame.draw.circle(windowSurface, BLACK, center, radius, 0)
         
         pygame.display.update()
-        
+
+        # Draws the text board onto the command line
         for i in range(1,9):
             print i, 
             for j in range(1,9):
@@ -330,8 +333,9 @@ class HumanPlayer:
     def __init__(self,name,color):
         self.name = name
         self.color = color
-    
+
     def check_grid_click(self, mouseX, mouseY):
+        '''Checks that only a space on the game board is clicked on.'''
         if mouseX < grid_padding or mouseX > (grid_padding + 8*(cell_width + grid_width)):
             return True
         if mouseY < grid_padding or mouseY > (grid_padding + 8*(cell_height + grid_width)):
@@ -345,6 +349,7 @@ class HumanPlayer:
         return False
         
     def chooseMove(self,board):
+        '''Takes human input in the form of a click on the game board for choosing a move.'''
         turnEnd = False
         while not turnEnd:
             for event in pygame.event.get():
@@ -374,7 +379,7 @@ class HumanPlayer:
                         move[1] in range(1,9) or move == (0,0)):
                             turnEnd = True
                     else:
-                        print 'Illegal entry, try again. (First one)'
+                        print 'Illegal entry, try again.'
 
         if move == (0,0):
             return None
@@ -455,7 +460,8 @@ class ComputerPlayer:
             
 if __name__=='__main__':
     OthelloBoard([]).playGame()
-    
+
+    # Once the game has ended, allows the user to close the window to end the program
     while True:
         playing = True 
         for event in pygame.event.get():
